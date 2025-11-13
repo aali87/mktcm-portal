@@ -4,6 +4,9 @@ import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/db';
 import Stripe from 'stripe';
 
+// Force dynamic rendering to prevent build-time execution
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   const body = await request.text();
   const signature = headers().get('stripe-signature');
