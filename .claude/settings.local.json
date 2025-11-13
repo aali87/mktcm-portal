@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app:*)",
+      "Bash(dir:*)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(tree:*)",
+      "Bash(copy .env.example .env)",
+      "Bash(cp:*)",
+      "Bash(node -e:*)",
+      "Bash(psql:*)",
+      "Bash(railway:*)",
+      "Bash(npx prisma migrate:*)",
+      "Bash(npm run db:seed:*)",
+      "Bash(npx prisma studio)",
+      "Bash(npm run test:stripe:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
