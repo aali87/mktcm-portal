@@ -4,15 +4,9 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-
-  // Redirect authenticated users to dashboard
-  if (session?.user) {
-    redirect('/dashboard');
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-neutral-50">

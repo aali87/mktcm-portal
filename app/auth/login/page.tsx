@@ -37,8 +37,8 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/dashboard");
-      router.refresh();
+      // Use window.location for a clean redirect that avoids callback loops
+      window.location.href = "/dashboard";
     } catch (error) {
       setError("Something went wrong. Please try again.");
       setIsLoading(false);
