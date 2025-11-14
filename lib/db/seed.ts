@@ -96,19 +96,64 @@ async function main() {
     freePrintables,
   });
 
-  // You can add sample videos and workbooks here
-  // Example:
-  // await prisma.video.create({
-  //   data: {
-  //     productId: freeWorkshop.id,
-  //     title: 'Introduction to TCM Fertility',
-  //     url: '/videos/intro-tcm.mp4',
-  //     duration: 1800,
-  //     order: 1,
-  //   },
-  // });
+  // Create Free Workshop videos
+  console.log('\nCreating Free Workshop videos...');
 
-  console.log('Seed completed successfully!');
+  const video1 = await prisma.video.upsert({
+    where: { id: 'free-workshop-video-1' },
+    update: {
+      url: 'videos/free-workshop/living-vibrantly-day-1.mp4',
+    },
+    create: {
+      id: 'free-workshop-video-1',
+      productId: freeWorkshop.id,
+      title: 'Day 1: Foundation of Vibrant Living',
+      description: 'Discover the essential principles of Traditional Chinese Medicine and how they apply to your fertility journey. Learn the foundations of living vibrantly.',
+      url: 'videos/free-workshop/living-vibrantly-day-1.mp4',
+      duration: 1200, // 20 minutes in seconds
+      order: 1,
+    },
+  });
+
+  const video2 = await prisma.video.upsert({
+    where: { id: 'free-workshop-video-2' },
+    update: {
+      url: 'videos/free-workshop/living-vibrantly-day-2.mp4',
+    },
+    create: {
+      id: 'free-workshop-video-2',
+      productId: freeWorkshop.id,
+      title: 'Day 2: Nutrition and Lifestyle',
+      description: 'Explore how nutrition and lifestyle choices impact your fertility from a TCM perspective. Get practical tips you can implement today.',
+      url: 'videos/free-workshop/living-vibrantly-day-2.mp4',
+      duration: 1500, // 25 minutes in seconds
+      order: 2,
+    },
+  });
+
+  const video3 = await prisma.video.upsert({
+    where: { id: 'free-workshop-video-3' },
+    update: {
+      url: 'videos/free-workshop/living-vibrantly-day-3.mp4',
+    },
+    create: {
+      id: 'free-workshop-video-3',
+      productId: freeWorkshop.id,
+      title: 'Day 3: Stress Management & Next Steps',
+      description: 'Master stress management techniques specifically designed for fertility support. Learn your personalized next steps on this journey.',
+      url: 'videos/free-workshop/living-vibrantly-day-3.mp4',
+      duration: 1800, // 30 minutes in seconds
+      order: 3,
+    },
+  });
+
+  console.log('Free Workshop videos created:', {
+    video1,
+    video2,
+    video3,
+  });
+
+  console.log('\nSeed completed successfully!');
 }
 
 main()

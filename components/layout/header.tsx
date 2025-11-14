@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, User } from "lucide-react";
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -62,11 +63,13 @@ export function Header({ user }: HeaderProps) {
                     {user.name || user.email}
                   </Button>
                 </Link>
-                <Link href="/api/auth/signout">
-                  <Button variant="outline" size="sm">
-                    Sign Out
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                >
+                  Sign Out
+                </Button>
               </div>
             ) : (
               <div className="flex items-center space-x-4">
@@ -128,13 +131,15 @@ export function Header({ user }: HeaderProps) {
                   >
                     Profile
                   </Link>
-                  <Link
-                    href="/api/auth/signout"
-                    className="block text-sm text-neutral-600"
-                    onClick={() => setMobileMenuOpen(false)}
+                  <button
+                    className="block text-sm text-neutral-600 text-left w-full"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      signOut({ callbackUrl: '/' });
+                    }}
                   >
                     Sign Out
-                  </Link>
+                  </button>
                 </>
               ) : (
                 <>
