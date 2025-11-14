@@ -29,7 +29,7 @@ export default async function FreeWorkshopDashboard() {
     where: { slug: 'free-workshop' },
     include: {
       videos: {
-        orderBy: { orderIndex: 'asc' },
+        orderBy: { order: 'asc' },
       },
     },
   });

@@ -72,7 +72,7 @@ export default async function VideoPlayerPage({ params }: VideoPageProps) {
   // Get all videos in this product for navigation
   const allVideos = await prisma.video.findMany({
     where: { productId: video.product.id },
-    orderBy: { orderIndex: 'asc' },
+    orderBy: { order: 'asc' },
   });
 
   const currentIndex = allVideos.findIndex((v) => v.id === video.id);

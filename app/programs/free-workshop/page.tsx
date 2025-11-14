@@ -15,7 +15,7 @@ export default async function FreeWorkshopPage() {
     where: { slug: 'free-workshop' },
     include: {
       videos: {
-        orderBy: { orderIndex: 'asc' },
+        orderBy: { order: 'asc' },
       },
     },
   });
