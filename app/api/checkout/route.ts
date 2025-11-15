@@ -92,8 +92,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get the base URL from the request origin
-    const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    // Get the base URL from the request
+    // Priority: 1) origin header, 2) referer header's origin, 3) NEXT_PUBLIC_APP_URL, 4) localhost
+    let origin = request.headers.get('origin');
+
+    if (!origin) {
+      // Try to get origin from referer
+      const referer = request.headers.get('referer');
+      if (referer) {
+        try {
+          const refererUrl = new URL(referer);
+          origin = refererUrl.origin;
+        } catch (e) {
+          // Invalid referer URL
+        }
+      }
+    }
+
+    // Fallback to environment variable or localhost
+    if (!origin) {
+      origin = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    }
+
+    console.log('Checkout redirect URLs:', {
+      origin,
+      success_url: `${origin}/api/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/programs/${product.slug}?canceled=true`,
+    });
 
     // Create Stripe checkout session
     const checkoutSession = await stripe.checkout.sessions.create({
