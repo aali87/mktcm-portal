@@ -24,7 +24,7 @@ export default async function ProgramPage({ params, searchParams }: ProgramPageP
         orderBy: { order: 'asc' },
       },
       workbooks: {
-        orderBy: { order: 'asc' },
+        orderBy: { orderIndex: 'asc' },
       },
     },
   });
