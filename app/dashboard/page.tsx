@@ -30,7 +30,7 @@ export default async function DashboardPage() {
             orderBy: { order: "asc" },
           },
           workbooks: {
-            orderBy: { order: "asc" },
+            orderBy: { orderIndex: "asc" },
           },
         },
       },
