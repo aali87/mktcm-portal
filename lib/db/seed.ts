@@ -48,15 +48,18 @@ async function main() {
 
   const stressFreeGoddess = await prisma.product.upsert({
     where: { slug: 'stress-free-goddess' },
-    update: {},
+    update: {
+      priceId: process.env.STRIPE_PRICE_ID_SFG || 'price_1SToTU3rioCqkoangJhHwXE8',
+    },
     create: {
       name: 'Stress-free Goddess Program',
       slug: 'stress-free-goddess',
-      description: 'Learn powerful stress management techniques designed specifically for your fertility journey. Reduce cortisol and create a calm, nurturing environment for conception.',
+      description: '12 weeks of TCM practices to reduce stress, improve sleep, and boost energy. Learn Qigong, Reflexology & Guasha techniques for deep calm and vitality.',
       price: 2900, // $29.00
       type: ProductType.PAID_PROGRAM,
       featured: false,
       order: 3,
+      priceId: process.env.STRIPE_PRICE_ID_SFG || 'price_1SToTU3rioCqkoangJhHwXE8',
     },
   });
 
@@ -274,6 +277,124 @@ async function main() {
   }
 
   console.log(`Created ${workbooksData.length} workbooks for Optimal Fertility Blueprint`);
+
+  // Create Stress-free Goddess videos
+  console.log('\nCreating Stress-free Goddess videos...');
+
+  const stressFreeGoddessVideos = [
+    {
+      id: 'sfg-week-1',
+      title: 'Week 1: Qigong to Improve Metabolism',
+      description: 'Move, transform and free stagnations. Nourish your mind, body and spirit through the transformation of fluids into blood.',
+      url: 'videos/stress-free-goddess/week-01-qigong-metabolism.mp4',
+      duration: 900, // 15 minutes
+      order: 1,
+    },
+    {
+      id: 'sfg-week-2',
+      title: 'Week 2: Reflexology to Relieve Stress',
+      description: 'Use ear seed reflexology to stimulate a feedback loop to your brain that encourages relaxation and relieves stress-related tension.',
+      url: 'videos/stress-free-goddess/week-02-reflexology-stress.mp4',
+      duration: 720, // 12 minutes
+      order: 2,
+    },
+    {
+      id: 'sfg-week-3',
+      title: 'Week 3: Qigong to Calm the Mind and Relax Tension',
+      description: 'Free pent-up tension using qigong and breathwork to improve circulation of lymphatic fluids and calm rising energy.',
+      url: 'videos/stress-free-goddess/week-03-qigong-calm-mind.mp4',
+      duration: 1080, // 18 minutes
+      order: 3,
+    },
+    {
+      id: 'sfg-week-4',
+      title: 'Week 4: Qigong to Mist & Nourish Tissue and Organs',
+      description: 'Help your body distribute nutrient-rich fluids to every cell, tissue and organ. Strengthen the Metal element related to your Lungs.',
+      url: 'videos/stress-free-goddess/week-04-qigong-mist-nourish.mp4',
+      duration: 960, // 16 minutes
+      order: 4,
+    },
+    {
+      id: 'sfg-week-5',
+      title: 'Week 5: Reflexology to Reduce Anxiety',
+      description: 'Apply ear seeds to points that help your body open up and return to vibrancy. Breathe deeper and calm your heart rate.',
+      url: 'videos/stress-free-goddess/week-05-reflexology-anxiety.mp4',
+      duration: 600, // 10 minutes
+      order: 5,
+    },
+    {
+      id: 'sfg-week-6',
+      title: 'Week 6: Guasha (Peaceful Skin Scraping) to Relieve Anxiety',
+      description: 'Gentle scraping to release trapped heat and stagnant blood. Bring blood to the surface to promote relaxation and calm.',
+      url: 'videos/stress-free-goddess/week-06-guasha-anxiety.mp4',
+      duration: 840, // 14 minutes
+      order: 6,
+    },
+    {
+      id: 'sfg-week-7',
+      title: 'Week 7: Reflexology to Improve Digestion',
+      description: 'Support your body\'s ability to metabolize nutrients with ear seed reflexology. Address bloating, gas, and digestive sluggishness.',
+      url: 'videos/stress-free-goddess/week-07-reflexology-digestion.mp4',
+      duration: 660, // 11 minutes
+      order: 7,
+    },
+    {
+      id: 'sfg-week-8',
+      title: 'Week 8: Qigong to Support Digestion',
+      description: 'Strengthen your digestive system by building the Earth element related to Stomach & Spleen. Optimize nutrient absorption.',
+      url: 'videos/stress-free-goddess/week-08-qigong-digestion.mp4',
+      duration: 1020, // 17 minutes
+      order: 8,
+    },
+    {
+      id: 'sfg-week-9',
+      title: 'Week 9: Reflexology to Improve Sleep',
+      description: 'Stimulate blood production that is essential for calming the mind. Support your body\'s nighttime recovery and rejuvenation.',
+      url: 'videos/stress-free-goddess/week-09-reflexology-sleep.mp4',
+      duration: 600, // 10 minutes
+      order: 9,
+    },
+    {
+      id: 'sfg-week-10',
+      title: 'Week 10: Qigong to Nourish the Body',
+      description: 'Raise clear fluids and energy upward to clear, calm and relax your mind. Support healthy fluid filtration and radiant skin.',
+      url: 'videos/stress-free-goddess/week-10-qigong-nourish.mp4',
+      duration: 1140, // 19 minutes
+      order: 10,
+    },
+    {
+      id: 'sfg-week-11',
+      title: 'Week 11: Guasha to Improve Sleep',
+      description: 'Clear trapped heat that rises and prevents relaxation. Use gentle skin scraping daily to support better sleep.',
+      url: 'videos/stress-free-goddess/week-11-guasha-sleep.mp4',
+      duration: 780, // 13 minutes
+      order: 11,
+    },
+    {
+      id: 'sfg-week-12',
+      title: 'Week 12: Reflexology to Improve Energy',
+      description: 'Stimulate the three main energetic systems that produce Qi in your body. Boost vitality after periods of stress or insomnia.',
+      url: 'videos/stress-free-goddess/week-12-reflexology-energy.mp4',
+      duration: 720, // 12 minutes
+      order: 12,
+    },
+  ];
+
+  for (const videoData of stressFreeGoddessVideos) {
+    await prisma.video.upsert({
+      where: { id: videoData.id },
+      update: {
+        url: videoData.url,
+        duration: videoData.duration,
+      },
+      create: {
+        productId: stressFreeGoddess.id,
+        ...videoData,
+      },
+    });
+  }
+
+  console.log(`Created ${stressFreeGoddessVideos.length} videos for Stress-free Goddess`);
 
   console.log('\nSeed completed successfully!');
 }

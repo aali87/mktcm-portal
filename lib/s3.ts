@@ -90,4 +90,36 @@ export async function getSignedUrlsForFolder(
   }
 }
 
+/**
+ * Generate a signed URL for a PDF file in S3
+ * @param pdfKey - The S3 object key for the PDF (e.g., "pdfs/stress-free-goddess/program-guide.pdf")
+ * @param expiresIn - URL expiration time in seconds (default: 3600 = 1 hour)
+ * @returns Signed URL string
+ */
+export async function getSignedPdfUrl(
+  pdfKey: string,
+  expiresIn: number = 3600
+): Promise<string> {
+  if (!BUCKET_NAME) {
+    throw new Error('AWS_S3_BUCKET environment variable is not set');
+  }
+
+  if (!pdfKey) {
+    throw new Error('PDF key is required');
+  }
+
+  const command = new GetObjectCommand({
+    Bucket: BUCKET_NAME,
+    Key: pdfKey,
+  });
+
+  try {
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn });
+    return signedUrl;
+  } catch (error) {
+    console.error('Error generating signed PDF URL:', error);
+    throw new Error('Failed to generate signed URL for PDF');
+  }
+}
+
 export { s3Client };
