@@ -153,6 +153,128 @@ async function main() {
     video3,
   });
 
+  // Create Optimal Fertility Blueprint workbooks
+  console.log('\nCreating Optimal Fertility Blueprint workbooks...');
+
+  const workbooksData = [
+    {
+      slug: 'week-1-lungs',
+      title: 'Week 1: Lungs - Strengthen Qi & Immunity',
+      description: 'Learn how the lungs govern your Qi and defensive energy. Includes acupressure points, breathing exercises, and immune-boosting practices.',
+      weekNumber: 1,
+      s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-1-lungs',
+      totalPages: 8,
+      bonusOnly: false,
+      orderIndex: 1,
+    },
+    {
+      slug: 'week-2-qi',
+      title: 'Week 2: Qi - Cultivate Your Vital Energy',
+      description: 'Discover how to build and circulate Qi for optimal reproductive health. Qigong movements and energy cultivation practices.',
+      weekNumber: 2,
+      s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-2-qi',
+      totalPages: 8,
+      bonusOnly: false,
+      orderIndex: 2,
+    },
+    {
+      slug: 'week-3-spleen',
+      title: 'Week 3: Spleen - Nourish Digestion & Blood',
+      description: 'Support your spleen to transform food into rich, nourishing blood. Dietary therapy and self-care practices.',
+      weekNumber: 3,
+      s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-3-spleen',
+      totalPages: 8,
+      bonusOnly: false,
+      orderIndex: 3,
+    },
+    {
+      slug: 'week-4-kidneys',
+      title: 'Week 4: Kidneys - Build Essence & Vitality',
+      description: 'The kidneys store your reproductive essence (Jing). Learn how to preserve and build this vital resource.',
+      weekNumber: 4,
+      s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-4-kidneys',
+      totalPages: 8,
+      bonusOnly: false,
+      orderIndex: 4,
+    },
+    {
+      slug: 'week-5-liver',
+      title: 'Week 5: Liver - Harmonize Emotions & Flow',
+      description: 'The liver ensures smooth flow of Qi and blood. Emotional release techniques and stress management.',
+      weekNumber: 5,
+      s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-5-liver',
+      totalPages: 8,
+      bonusOnly: false,
+      orderIndex: 5,
+    },
+    {
+      slug: 'week-6-heart',
+      title: 'Week 6: Heart - Cultivate Joy & Connection',
+      description: 'The heart houses your spirit (Shen). Heart-opening practices and meditation for emotional well-being.',
+      weekNumber: 6,
+      s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-6-heart',
+      totalPages: 8,
+      bonusOnly: false,
+      orderIndex: 6,
+    },
+    {
+      slug: 'week-7-blood',
+      title: 'Week 7: Blood - Build & Circulate Life Force',
+      description: 'Blood nourishes your reproductive organs and supports conception. Blood-building nutrition and practices.',
+      weekNumber: 7,
+      s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-7-blood',
+      totalPages: 8,
+      bonusOnly: false,
+      orderIndex: 7,
+    },
+    {
+      slug: 'week-8-yin',
+      title: 'Week 8: Yin - Deepen Rest & Nourishment',
+      description: 'Yin is the cooling, nourishing, restorative aspect of your being. Yin yoga and self-nourishment practices.',
+      weekNumber: 8,
+      s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-8-yin',
+      totalPages: 8,
+      bonusOnly: false,
+      orderIndex: 8,
+    },
+    {
+      slug: 'week-9-yang',
+      title: 'Week 9: Yang - Activate Warmth & Movement',
+      description: 'Yang is the warming, activating energy. Learn to balance yin and yang for optimal fertility.',
+      weekNumber: 9,
+      s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-9-yang',
+      totalPages: 8,
+      bonusOnly: false,
+      orderIndex: 9,
+    },
+    {
+      slug: 'bonus-workbook',
+      title: 'Bonus: Complete Fertility Toolkit',
+      description: 'Your comprehensive reference guide with supplement protocols, meal plans, cycle tracking, and advanced techniques.',
+      weekNumber: null,
+      s3FolderPath: 'workbooks/optimal-fertility-blueprint/bonus-workbook',
+      totalPages: 12,
+      bonusOnly: true,
+      orderIndex: 10,
+    },
+  ];
+
+  for (const workbookData of workbooksData) {
+    await prisma.workbook.upsert({
+      where: { slug: workbookData.slug },
+      update: {
+        s3FolderPath: workbookData.s3FolderPath,
+        totalPages: workbookData.totalPages,
+      },
+      create: {
+        productId: optimalFertilityBlueprint.id,
+        ...workbookData,
+      },
+    });
+  }
+
+  console.log(`Created ${workbooksData.length} workbooks for Optimal Fertility Blueprint`);
+
   console.log('\nSeed completed successfully!');
 }
 

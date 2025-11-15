@@ -55,6 +55,12 @@ export async function POST(request: NextRequest) {
         break;
       }
 
+      case 'invoice.payment_succeeded': {
+        const invoice = event.data.object as Stripe.Invoice;
+        await handleInvoicePaymentSucceeded(invoice);
+        break;
+      }
+
       default:
         console.log(`Unhandled event type: ${event.type}`);
     }
@@ -99,18 +105,38 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return;
   }
 
+  // Determine payment type based on price ID
+  let paymentType: 'FULL' | 'PLAN' | null = null;
+  let subscriptionId: string | null = null;
+
+  if (session.mode === 'subscription') {
+    paymentType = 'PLAN';
+    subscriptionId = session.subscription as string;
+  } else if (session.mode === 'payment') {
+    // Check which price ID was used
+    if (product.priceId && session.metadata?.priceId === product.priceId) {
+      paymentType = 'FULL';
+    } else if (product.paymentPlanPriceId && session.metadata?.priceId === product.paymentPlanPriceId) {
+      paymentType = 'PLAN';
+    }
+  }
+
   // Create purchase record
   const purchase = await prisma.purchase.create({
     data: {
       userId,
       productId,
       stripePaymentId: session.id,
+      stripeCustomerId: session.customer as string,
+      stripeSubscriptionId: subscriptionId,
       amount: session.amount_total || product.price,
       status: 'COMPLETED',
+      paymentType,
+      planComplete: paymentType === 'FULL', // Full payment is immediately complete
     },
   });
 
-  console.log('Purchase created:', purchase.id);
+  console.log('Purchase created:', purchase.id, { paymentType, subscriptionId });
 
   // TODO: Send purchase confirmation email via Resend
   // This will be implemented in the next phase
@@ -137,4 +163,60 @@ async function handleCheckoutFailed(session: Stripe.Checkout.Session) {
   });
 
   console.log('Failed purchase recorded:', session.id);
+}
+
+async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
+  // Only process subscription invoices
+  if (!invoice.subscription) {
+    return;
+  }
+
+  const subscriptionId = invoice.subscription as string;
+
+  // Find the purchase by subscription ID
+  const purchase = await prisma.purchase.findFirst({
+    where: {
+      stripeSubscriptionId: subscriptionId,
+    },
+  });
+
+  if (!purchase) {
+    console.log('No purchase found for subscription:', subscriptionId);
+    return;
+  }
+
+  // If already marked complete, skip
+  if (purchase.planComplete) {
+    return;
+  }
+
+  // Get the subscription to check payment count
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+  // Count successful invoices for this subscription
+  const invoices = await stripe.invoices.list({
+    subscription: subscriptionId,
+    status: 'paid',
+    limit: 100,
+  });
+
+  const paidInvoiceCount = invoices.data.length;
+
+  console.log(`Subscription ${subscriptionId} has ${paidInvoiceCount} paid invoices`);
+
+  // For a 3-payment plan, mark complete after 3rd payment
+  // Adjust this number based on your payment plan structure
+  if (paidInvoiceCount >= 3) {
+    await prisma.purchase.update({
+      where: { id: purchase.id },
+      data: {
+        planComplete: true,
+      },
+    });
+
+    console.log(`Payment plan completed for purchase ${purchase.id}`);
+
+    // TODO: Send bonus workbook access notification email
+    console.log('TODO: Send bonus workbook unlocked email to user');
+  }
 }

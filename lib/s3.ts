@@ -44,4 +44,50 @@ export async function getSignedVideoUrl(
   }
 }
 
+/**
+ * Generate signed URLs for all pages in a workbook folder
+ * @param folderPath - The S3 folder path (e.g., "workbooks/optimal-fertility-blueprint/week-1-lungs")
+ * @param totalPages - Total number of pages in the workbook
+ * @param expiresIn - URL expiration time in seconds (default: 3600 = 1 hour)
+ * @returns Array of objects with pageNumber and signed URL
+ */
+export async function getSignedUrlsForFolder(
+  folderPath: string,
+  totalPages: number,
+  expiresIn: number = 3600
+): Promise<Array<{ pageNumber: number; url: string }>> {
+  if (!BUCKET_NAME) {
+    throw new Error('AWS_S3_BUCKET environment variable is not set');
+  }
+
+  if (!folderPath || !totalPages) {
+    throw new Error('Folder path and total pages are required');
+  }
+
+  try {
+    const urlPromises = [];
+
+    for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
+      const key = `${folderPath}/page-${pageNumber}.png`;
+      const command = new GetObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: key,
+      });
+
+      urlPromises.push(
+        getSignedUrl(s3Client, command, { expiresIn }).then(url => ({
+          pageNumber,
+          url,
+        }))
+      );
+    }
+
+    const results = await Promise.all(urlPromises);
+    return results;
+  } catch (error) {
+    console.error('Error generating signed URLs for folder:', error);
+    throw new Error('Failed to generate signed URLs for workbook pages');
+  }
+}
+
 export { s3Client };
