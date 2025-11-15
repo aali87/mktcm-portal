@@ -68,7 +68,7 @@ export async function getSignedUrlsForFolder(
     const urlPromises = [];
 
     for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
-      const key = `${folderPath}/page-${pageNumber}.png`;
+      const key = `${folderPath}/${pageNumber}.png`;
       const command = new GetObjectCommand({
         Bucket: BUCKET_NAME,
         Key: key,
