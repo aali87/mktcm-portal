@@ -27,6 +27,8 @@ export function CheckoutButton({
     setIsLoading(true);
 
     try {
+      console.log('Creating checkout session:', { productId, priceType });
+
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: {
@@ -39,8 +41,10 @@ export function CheckoutButton({
       });
 
       const data = await response.json();
+      console.log('Checkout response:', { status: response.status, data });
 
       if (!response.ok) {
+        console.error('Checkout failed:', data);
         alert(data.error || "Failed to create checkout session");
         setIsLoading(false);
         return;
@@ -48,7 +52,12 @@ export function CheckoutButton({
 
       // Redirect to Stripe Checkout
       if (data.url) {
+        console.log('Redirecting to Stripe:', data.url);
         window.location.href = data.url;
+      } else {
+        console.error('No URL in response:', data);
+        alert("Failed to get checkout URL");
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Checkout error:", error);

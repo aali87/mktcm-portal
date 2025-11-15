@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { CheckoutButton } from "@/components/CheckoutButton";
 import Link from "next/link";
 import { CheckCircle2, BookOpen, Lock, Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -337,13 +338,14 @@ export default async function OptimalFertilityBlueprintPage() {
                   </div>
 
                   {session?.user ? (
-                    <form action="/api/checkout" method="POST">
-                      <input type="hidden" name="productId" value={product.id} />
-                      <input type="hidden" name="priceType" value="full" />
-                      <Button type="submit" size="lg" className="w-full">
-                        Enroll Now - ${fullPrice}
-                      </Button>
-                    </form>
+                    <CheckoutButton
+                      productId={product.id}
+                      priceType="one-time"
+                      size="lg"
+                      className="w-full"
+                    >
+                      Enroll Now - ${fullPrice}
+                    </CheckoutButton>
                   ) : (
                     <Link href="/auth/signup">
                       <Button size="lg" className="w-full">
@@ -389,13 +391,15 @@ export default async function OptimalFertilityBlueprintPage() {
                   </div>
 
                   {session?.user ? (
-                    <form action="/api/checkout" method="POST">
-                      <input type="hidden" name="productId" value={product.id} />
-                      <input type="hidden" name="priceType" value="plan" />
-                      <Button type="submit" size="lg" variant="outline" className="w-full">
-                        Start with ${planPrice}/month
-                      </Button>
-                    </form>
+                    <CheckoutButton
+                      productId={product.id}
+                      priceType="payment-plan"
+                      size="lg"
+                      variant="outline"
+                      className="w-full"
+                    >
+                      Start with ${planPrice}/month
+                    </CheckoutButton>
                   ) : (
                     <Link href="/auth/signup">
                       <Button size="lg" variant="outline" className="w-full">
