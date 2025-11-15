@@ -92,6 +92,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get the base URL from the request origin
+    const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
     // Create Stripe checkout session
     const checkoutSession = await stripe.checkout.sessions.create({
       customer_email: user.email,
@@ -102,8 +105,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: priceType === 'payment-plan' ? 'subscription' : 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/programs/${product.slug}?canceled=true`,
+      success_url: `${origin}/api/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/programs/${product.slug}?canceled=true`,
       metadata: {
         userId: user.id,
         productId: product.id,
