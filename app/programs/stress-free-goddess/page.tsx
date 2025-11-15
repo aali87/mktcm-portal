@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { CheckoutButton } from "@/components/CheckoutButton";
 import Link from "next/link";
 import { CheckCircle2, Download, Play, Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -69,14 +70,15 @@ export default async function StressFreeGoddessPage() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               {session?.user ? (
-                <form action="/api/checkout" method="POST">
-                  <input type="hidden" name="productId" value={product.id} />
-                  <input type="hidden" name="priceType" value="full" />
-                  <Button type="submit" size="lg" className="text-lg px-8">
-                    Get Lifetime Access - ${price}
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </form>
+                <CheckoutButton
+                  productId={product.id}
+                  priceType="one-time"
+                  size="lg"
+                  className="text-lg px-8"
+                >
+                  Get Lifetime Access - ${price}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </CheckoutButton>
               ) : (
                 <>
                   <Link href="/auth/signup">
@@ -317,13 +319,14 @@ export default async function StressFreeGoddessPage() {
 
               <div className="flex flex-col items-center gap-4 pt-4">
                 {session?.user ? (
-                  <form action="/api/checkout" method="POST">
-                    <input type="hidden" name="productId" value={product.id} />
-                    <input type="hidden" name="priceType" value="full" />
-                    <Button type="submit" size="lg" className="text-lg px-12">
-                      Get Lifetime Access - ${price}
-                    </Button>
-                  </form>
+                  <CheckoutButton
+                    productId={product.id}
+                    priceType="one-time"
+                    size="lg"
+                    className="text-lg px-12"
+                  >
+                    Get Lifetime Access - ${price}
+                  </CheckoutButton>
                 ) : (
                   <Link href="/auth/signup">
                     <Button size="lg" className="text-lg px-12">

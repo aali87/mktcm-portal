@@ -35,7 +35,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // Generate signed URL (1 hour expiration)
     const signedUrl = await getSignedPdfUrl(pdfKey, 3600);
 
-    return NextResponse.json({ url: signedUrl });
+    // Redirect to the signed S3 URL
+    return NextResponse.redirect(signedUrl);
   } catch (error) {
     console.error('Error generating PDF URL:', error);
     return NextResponse.json(
