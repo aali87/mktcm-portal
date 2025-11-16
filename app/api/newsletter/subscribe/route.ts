@@ -157,6 +157,7 @@ export async function OPTIONS(request: NextRequest) {
   const origin = request.headers.get('origin');
   const allowedOrigins = [
     'https://awesome-stick-193250.framer.app',
+    'https://stellar-room-885268.framer.app',
     'https://www.fertilityflowmethod.com',
     'https://fertilityflowmethod.com',
     process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
