@@ -16,8 +16,8 @@ export default withAuth(
     const origin = req.headers.get('origin');
     const pathname = req.nextUrl.pathname;
 
-    // Add CORS headers for newsletter API endpoint
-    if (pathname.startsWith('/api/newsletter')) {
+    // Add CORS headers for newsletter and book-session API endpoints
+    if (pathname.startsWith('/api/newsletter') || pathname.startsWith('/api/book-session')) {
       const isAllowedOrigin = ALLOWED_ORIGINS.some(
         allowed => origin && origin.includes(allowed)
       );
@@ -38,8 +38,8 @@ export default withAuth(
       authorized: ({ req, token }) => {
         const pathname = req.nextUrl.pathname;
 
-        // Allow newsletter API without auth
-        if (pathname.startsWith('/api/newsletter')) {
+        // Allow newsletter and book-session APIs without auth
+        if (pathname.startsWith('/api/newsletter') || pathname.startsWith('/api/book-session')) {
           return true;
         }
 
@@ -59,5 +59,6 @@ export const config = {
     '/dashboard/:path*',
     '/programs/:path*/access',
     '/api/newsletter/:path*',
+    '/api/book-session/:path*',
   ],
 };
