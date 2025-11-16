@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
         productId: product.id,
         amount: 0,
         status: 'COMPLETED',
-        paymentType: 'FREE',
+        // paymentType is null for free products
       },
     });
 
