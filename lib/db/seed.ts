@@ -65,15 +65,18 @@ async function main() {
 
   const fearlesslyFertileYoga = await prisma.product.upsert({
     where: { slug: 'fearlessly-fertile-yoga' },
-    update: {},
+    update: {
+      priceId: process.env.STRIPE_PRICE_ID_FFY || 'price_1SU8HB3rioCqkoanwkdtbkTR',
+    },
     create: {
       name: 'Fearlessly Fertile Yoga',
       slug: 'fearlessly-fertile-yoga',
-      description: 'Gentle, fertility-focused yoga sequences that support reproductive health and emotional balance. Practice at your own pace with guided video instruction.',
+      description: '10 TCM-inspired yoga sessions to enhance fertility, hormonal balance, and vitality. Ancient wisdom meets modern fertility support.',
       price: 1500, // $15.00
-      type: ProductType.DIGITAL_PRODUCT,
+      type: ProductType.PAID_PROGRAM,
       featured: false,
       order: 4,
+      priceId: process.env.STRIPE_PRICE_ID_FFY || 'price_1SU8HB3rioCqkoanwkdtbkTR',
     },
   });
 
@@ -395,6 +398,108 @@ async function main() {
   }
 
   console.log(`Created ${stressFreeGoddessVideos.length} videos for Stress-free Goddess`);
+
+  // Create Fearlessly Fertile Yoga videos
+  console.log('\nCreating Fearlessly Fertile Yoga videos...');
+
+  const fearlesslyFertileYogaVideos = [
+    {
+      id: 'ffy-video-1',
+      title: 'Enhancing Hormonal Well-being',
+      description: 'Explore the relationship between Liver, Spleen, and Kidney systems—the key regulators of hormonal stability. Through TCM movement, breath, and acupressure, regulate stress, nourish Yin and Yang, and support endocrine and menstrual cycles. Weekly mantra: Within me is boundless love',
+      url: 'videos/fearlessly-fertile-yoga/video-01-hormonal-wellbeing.mov',
+      duration: 1980, // 33 minutes
+      order: 1,
+    },
+    {
+      id: 'ffy-video-2',
+      title: 'Eliminate Waste and Enhance Blood Circulation',
+      description: 'Support detoxification through proper Qi and Blood movement to clear stagnation and optimize nutrient delivery to reproductive organs. Stimulate circulation, strengthen liver function, and prepare the body for optimal fertility. Weekly mantra: Please let me feel inner peace of my centre, of my centre of me',
+      url: 'videos/fearlessly-fertile-yoga/video-02-eliminate-waste-circulation.mov',
+      duration: 2280, // 38 minutes
+      order: 2,
+    },
+    {
+      id: 'ffy-video-3',
+      title: 'Harnessing Yin Energy for Substance Creation',
+      description: 'Cultivate Yin energy—the foundation of blood, essence, and fluids that nourish fertility. Through restorative movement and breathwork, replenish your body\'s reserves, support egg quality, and connect with your innate creative power. Weekly mantra: I have the power to create',
+      url: 'videos/fearlessly-fertile-yoga/video-03-yin-energy-substance.mov',
+      duration: 2220, // 37 minutes
+      order: 3,
+    },
+    {
+      id: 'ffy-video-4',
+      title: 'Release & Embrace the Flow',
+      description: 'Channel the Water element\'s fluidity through flowing yoga and Qigong. Enhance circulation, calm the nervous system, and awaken reproductive vitality. Dissolve physical and emotional tension with dynamic breathing techniques. Weekly mantra: Breathe it in, let it out, breathe it in, let it go',
+      url: 'videos/fearlessly-fertile-yoga/video-04-release-embrace-flow.mov',
+      duration: 2040, // 34 minutes
+      order: 4,
+    },
+    {
+      id: 'ffy-video-5',
+      title: 'Awakening Yang Qi for Growth & Transformation',
+      description: 'Awaken your inner fire through dynamic breathwork, acupressure, and Qigong-inspired movement. Experience Kapalabhati (Breath of Fire) as it stimulates circulation, clears stagnation, and ignites reproductive vitality. Weekly mantra: Ease, Release, Relief',
+      url: 'videos/fearlessly-fertile-yoga/video-05-yang-qi-transformation.mov',
+      duration: 2460, // 41 minutes
+      order: 5,
+    },
+    {
+      id: 'ffy-video-6',
+      title: 'Fascia Flossing for Stress-Free Living',
+      description: 'Blend modern fascia flossing with ancient TCM wisdom to release deep-seated tension and enhance flexibility. Support meridian pathways that nourish organs and balance emotions. Restore structural and emotional freedom. Weekly mantra: Be here now',
+      url: 'videos/fearlessly-fertile-yoga/video-06-fascia-flossing.mov',
+      duration: 2940, // 49 minutes
+      order: 6,
+    },
+    {
+      id: 'ffy-video-7',
+      title: 'Awakening the Power Within',
+      description: 'Awaken inner power through Qigong, breathwork, cupping techniques, and acupressure. Activate lung and kidney channels to boost Qi circulation, enhance sexual vitality, and nourish creative energy from the core. Weekly mantra: Thank you',
+      url: 'videos/fearlessly-fertile-yoga/video-07-power-within.mov',
+      duration: 2940, // 49 minutes
+      order: 7,
+    },
+    {
+      id: 'ffy-video-8',
+      title: 'Fluid Dynamics for a Healthier You',
+      description: 'Combine alternating nostril breathing, hip mobility work, and Qigong to awaken your body\'s natural fluid dynamics. Enhance lymphatic drainage, improve blood circulation, and support hormonal balance. Weekly mantra: I\'m all, I need, to get by',
+      url: 'videos/fearlessly-fertile-yoga/video-08-fluid-dynamics.mov',
+      duration: 2640, // 44 minutes
+      order: 8,
+    },
+    {
+      id: 'ffy-video-9',
+      title: 'Cool, Calm, and Fired Up',
+      description: 'Combine fiery breathwork, side stretches, and acupressure to awaken and ground your inner energy. Heart-opening chest expanders and flowing cat-cow movements release tension while supporting emotional balance. Weekly mantra: The beat that unites us, live to the rhythm of peace',
+      url: 'videos/fearlessly-fertile-yoga/video-09-cool-calm-fired-up.mov',
+      duration: 2580, // 43 minutes
+      order: 9,
+    },
+    {
+      id: 'ffy-video-10',
+      title: 'Shine with Your Heart\'s Inner Glow',
+      description: 'Combine alternate nostril breathing, heart-centered breathwork, and chest-opening poses to harmonize hormones and cultivate inner calm. Flow through Trikonasana and dynamic chest taps to ignite vitality and confidence. Weekly mantra: I reach up, Feel love, Bring it to my heart',
+      url: 'videos/fearlessly-fertile-yoga/video-10-hearts-inner-glow.mov',
+      duration: 2820, // 47 minutes
+      order: 10,
+    },
+  ];
+
+  for (const videoData of fearlesslyFertileYogaVideos) {
+    await prisma.video.upsert({
+      where: { id: videoData.id },
+      update: {
+        url: videoData.url,
+        duration: videoData.duration,
+      },
+      create: {
+        productId: fearlesslyFertileYoga.id,
+        ...videoData,
+      },
+    });
+  }
+
+  console.log(`Created ${fearlesslyFertileYogaVideos.length} videos for Fearlessly Fertile Yoga`);
 
   console.log('\nSeed completed successfully!');
 }
