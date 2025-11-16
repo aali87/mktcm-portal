@@ -86,6 +86,7 @@ model Product {
   purchases   Purchase[]
   videos      Video[]
   workbooks   Workbook[]
+  printables  Printable[]
   priceId     String?    // Stripe Price ID
   paymentPlanPriceId String? // Stripe Price ID for payment plan
 
@@ -236,4 +237,21 @@ enum EmailStatus {
   PENDING
   SENT
   FAILED
+}
+
+// Printable PDF resources
+model Printable {
+  id          String   @id @default(cuid())
+  productId   String
+  title       String
+  description String
+  s3Key       String   // S3 path to the PDF file
+  orderIndex  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, s3Key])
+  @@map("printables")
 }

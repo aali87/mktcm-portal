@@ -84,12 +84,12 @@ async function main() {
     where: { slug: 'free-printables' },
     update: {},
     create: {
-      name: 'Free Printables',
+      name: 'Free TCM Food Therapy Printables',
       slug: 'free-printables',
-      description: 'Downloadable resources including cycle tracking sheets, fertility affirmations, meal planning templates, and self-care checklists.',
+      description: '4 downloadable TCM food therapy guides to support your fertility journey. Learn dietary principles for Dampness, Depleted Blood, Depleted Yang, and Depleted Yin.',
       price: 0,
       type: ProductType.FREE_RESOURCE,
-      featured: false,
+      featured: true,
       order: 5,
     },
   });
@@ -500,6 +500,59 @@ async function main() {
   }
 
   console.log(`Created ${fearlesslyFertileYogaVideos.length} videos for Fearlessly Fertile Yoga`);
+
+  // Create Free Printables
+  console.log('\nCreating Free TCM Printables...');
+
+  const printablesData = [
+    {
+      title: 'TCM Food Therapy to Treat Dampness',
+      description: 'Dietary principles and food lists to drain dampness, support Spleen function, and improve digestion. Includes grains, vegetables, herbs, and foods to avoid. Perfect for clearing bloating, heaviness, and digestive sluggishness.',
+      s3Key: 'printables/free-printables/tcm-food-therapy-dampness.pdf',
+      orderIndex: 1,
+    },
+    {
+      title: 'TCM Food Therapy to Treat Depleted Blood',
+      description: 'Nourish blood with mineral-dense foods. Perfect for fatigue, irregular cycles, or postpartum recovery. Includes healing teas, soups, and blood-building ingredients. Ideal for light periods, dizziness, or pale complexion.',
+      s3Key: 'printables/free-printables/tcm-food-therapy-depleted-blood.pdf',
+      orderIndex: 2,
+    },
+    {
+      title: 'TCM Food Therapy to Treat Depleted Yang',
+      description: 'Warm and tonify Yang energy with stews, soups, and warming spices. Support Kidney and Spleen Yang for better energy, warmth, and vitality. Great for those who feel cold, tired, or have low libido.',
+      s3Key: 'printables/free-printables/tcm-food-therapy-depleted-yang.pdf',
+      orderIndex: 3,
+    },
+    {
+      title: 'TCM Food Therapy to Treat Depleted Yin',
+      description: 'Cool, moisten, and nourish Yin with specific foods and herbs. Support Lung, Liver, and Kidney Yin for better sleep, skin, and hormonal balance. Perfect for night sweats, hot flashes, insomnia, or anxiety.',
+      s3Key: 'printables/free-printables/tcm-food-therapy-depleted-yin.pdf',
+      orderIndex: 4,
+    },
+  ];
+
+  for (const printableData of printablesData) {
+    await prisma.printable.upsert({
+      where: {
+        // Create a unique identifier based on productId and s3Key
+        productId_s3Key: {
+          productId: freePrintables.id,
+          s3Key: printableData.s3Key,
+        },
+      },
+      update: {
+        title: printableData.title,
+        description: printableData.description,
+        orderIndex: printableData.orderIndex,
+      },
+      create: {
+        productId: freePrintables.id,
+        ...printableData,
+      },
+    });
+  }
+
+  console.log(`Created ${printablesData.length} printables for Free TCM Printables`);
 
   console.log('\nSeed completed successfully!');
 }
