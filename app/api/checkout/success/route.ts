@@ -8,11 +8,27 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
+    // Get the proper origin for redirects
+    let origin = request.headers.get('x-forwarded-host');
+    if (origin) {
+      // Railway and other proxies use x-forwarded-host
+      const protocol = request.headers.get('x-forwarded-proto') || 'https';
+      origin = `${protocol}://${origin}`;
+    } else {
+      // Fallback to other methods
+      origin = request.headers.get('origin') ||
+               request.headers.get('referer')?.split('?')[0].replace(/\/$/, '') ||
+               process.env.NEXT_PUBLIC_APP_URL ||
+               'http://localhost:3000';
+    }
+
+    console.log('Success redirect origin:', origin);
+
     // Check if user is authenticated
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
       return NextResponse.redirect(
-        new URL('/auth/login?error=unauthorized', request.url)
+        new URL('/auth/login?error=unauthorized', origin)
       );
     }
 
@@ -22,7 +38,7 @@ export async function GET(request: NextRequest) {
 
     if (!sessionId) {
       return NextResponse.redirect(
-        new URL('/dashboard?error=missing-session', request.url)
+        new URL('/dashboard?error=missing-session', origin)
       );
     }
 
@@ -32,7 +48,7 @@ export async function GET(request: NextRequest) {
     // Verify the session belongs to the current user
     if (checkoutSession.customer_email !== session.user.email) {
       return NextResponse.redirect(
-        new URL('/dashboard?error=unauthorized', request.url)
+        new URL('/dashboard?error=unauthorized', origin)
       );
     }
 
@@ -40,23 +56,33 @@ export async function GET(request: NextRequest) {
     if (checkoutSession.payment_status === 'paid') {
       // Payment successful - redirect to dashboard with success message
       return NextResponse.redirect(
-        new URL('/dashboard?success=true', request.url)
+        new URL('/dashboard?success=true', origin)
       );
     } else if (checkoutSession.payment_status === 'unpaid') {
       // Payment pending (async payment methods)
       return NextResponse.redirect(
-        new URL('/dashboard?pending=true', request.url)
+        new URL('/dashboard?pending=true', origin)
       );
     } else {
       // Payment failed or incomplete
       return NextResponse.redirect(
-        new URL('/dashboard?error=payment-failed', request.url)
+        new URL('/dashboard?error=payment-failed', origin)
       );
     }
   } catch (error) {
     console.error('Checkout success error:', error);
+
+    // Get origin for error redirect
+    let origin = request.headers.get('x-forwarded-host');
+    if (origin) {
+      const protocol = request.headers.get('x-forwarded-proto') || 'https';
+      origin = `${protocol}://${origin}`;
+    } else {
+      origin = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    }
+
     return NextResponse.redirect(
-      new URL('/dashboard?error=verification-failed', request.url)
+      new URL('/dashboard?error=verification-failed', origin)
     );
   }
 }
