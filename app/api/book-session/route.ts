@@ -78,10 +78,25 @@ export async function POST(request: NextRequest) {
       }),
     });
 
-    const contactData: BrevoContactResponse = await contactResponse.json();
+    let contactData: BrevoContactResponse = {};
+
+    // Safely parse JSON response
+    try {
+      const responseText = await contactResponse.text();
+      if (responseText) {
+        contactData = JSON.parse(responseText);
+      }
+    } catch (parseError) {
+      console.error('Failed to parse Brevo response:', parseError);
+      contactData = {};
+    }
 
     // Handle duplicate contact - perform proper upsert
-    if (!contactResponse.ok && contactData.code === 'duplicate_parameter') {
+    // Check both error code and HTTP 400 status which Brevo uses for duplicates
+    const isDuplicate = (!contactResponse.ok && contactData.code === 'duplicate_parameter') ||
+                        (contactResponse.status === 400 && contactData.message?.includes('Contact already exist'));
+
+    if (isDuplicate || (!contactResponse.ok && contactResponse.status === 400)) {
       console.log('Contact already exists, performing upsert:', email);
 
       // Fetch existing contact to preserve data
