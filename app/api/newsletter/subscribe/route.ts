@@ -9,16 +9,9 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Brevo API configuration
 const BREVO_API_URL = 'https://api.brevo.com/v3';
 const NEWSLETTER_LIST_ID = 5;
-const WELCOME_EMAIL_TEMPLATE_ID = 1;
 
 interface BrevoContactResponse {
   id?: number;
-  code?: string;
-  message?: string;
-}
-
-interface BrevoEmailResponse {
-  messageId?: string;
   code?: string;
   message?: string;
 }
@@ -146,28 +139,7 @@ export async function POST(request: NextRequest) {
 
     console.log('Contact created successfully:', email);
 
-    // Step 2: Send welcome email using template
-    const emailResponse = await fetch(`${BREVO_API_URL}/smtp/email`, {
-      method: 'POST',
-      headers: {
-        'api-key': brevoApiKey,
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        to: [{ email: email }],
-        templateId: WELCOME_EMAIL_TEMPLATE_ID,
-      }),
-    });
-
-    const emailData: BrevoEmailResponse = await emailResponse.json();
-
-    if (!emailResponse.ok) {
-      console.error('Brevo welcome email error:', emailData);
-      // Don't fail the request if welcome email fails - contact is still subscribed
-      console.warn('Welcome email failed to send, but subscription was successful');
-    } else {
-      console.log('Welcome email sent successfully:', email);
-    }
+    // Welcome emails are handled by Brevo automation
 
     // Return success response
     return NextResponse.json(
