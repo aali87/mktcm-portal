@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create or update contact in Brevo
+    // Try to create contact in Brevo
     const contactResponse = await fetch(`${BREVO_API_URL}/contacts`, {
       method: 'POST',
       headers: {
@@ -74,41 +74,63 @@ export async function POST(request: NextRequest) {
           NEWSLETTER_OPTIN: newsletterOptIn || false,
         },
         listIds: [BOOK_SESSION_LIST_ID],
-        updateEnabled: true, // Update contact if already exists
+        updateEnabled: true,
       }),
     });
 
     const contactData: BrevoContactResponse = await contactResponse.json();
 
-    // Handle duplicate contact (already exists)
+    // Handle duplicate contact - perform proper upsert
     if (!contactResponse.ok && contactData.code === 'duplicate_parameter') {
-      console.log('Contact already exists, updating:', email);
+      console.log('Contact already exists, performing upsert:', email);
 
-      // Update existing contact to ensure they're in the list with latest info
-      const updateResponse = await fetch(`${BREVO_API_URL}/contacts/${encodeURIComponent(email)}`, {
-        method: 'PUT',
+      // Fetch existing contact to preserve data
+      const getResponse = await fetch(`${BREVO_API_URL}/contacts/${encodeURIComponent(email)}`, {
+        method: 'GET',
         headers: {
           'api-key': brevoApiKey,
-          'content-type': 'application/json',
         },
-        body: JSON.stringify({
-          attributes: {
-            FIRSTNAME: firstName,
-            LASTNAME: lastName,
-            PHONE: phone,
-            MESSAGE: message,
-            INTERESTS: interests.join(', '),
-            NEWSLETTER_OPTIN: newsletterOptIn || false,
-          },
-          listIds: [BOOK_SESSION_LIST_ID],
-        }),
       });
 
-      if (!updateResponse.ok) {
-        console.error('Failed to update existing contact:', await updateResponse.text());
-      }
+      if (getResponse.ok) {
+        const existingContact = await getResponse.json();
+        const existingAttributes = existingContact.attributes || {};
+        const existingListIds = existingContact.listIds || [];
 
-      console.log('Session booking request updated for:', email);
+        // Merge attributes - only update if new value provided and existing is blank/missing
+        const mergedAttributes: Record<string, any> = {
+          FIRSTNAME: existingAttributes.FIRSTNAME || firstName,
+          LASTNAME: existingAttributes.LASTNAME || lastName,
+          PHONE: existingAttributes.PHONE || phone,
+          MESSAGE: message, // Always update message with latest
+          INTERESTS: interests.join(', '), // Always update interests with latest
+          NEWSLETTER_OPTIN: newsletterOptIn || existingAttributes.NEWSLETTER_OPTIN || false,
+        };
+
+        // Merge list IDs - add to book-session list if not already there
+        const updatedListIds = existingListIds.includes(BOOK_SESSION_LIST_ID)
+          ? existingListIds
+          : [...existingListIds, BOOK_SESSION_LIST_ID];
+
+        // Update contact with merged data
+        const updateResponse = await fetch(`${BREVO_API_URL}/contacts/${encodeURIComponent(email)}`, {
+          method: 'PUT',
+          headers: {
+            'api-key': brevoApiKey,
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            attributes: mergedAttributes,
+            listIds: updatedListIds,
+          }),
+        });
+
+        if (!updateResponse.ok) {
+          console.error('Failed to update existing contact:', await updateResponse.text());
+        } else {
+          console.log('Contact upserted successfully:', email);
+        }
+      }
 
       return NextResponse.json(
         {
@@ -128,7 +150,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('Session booking request created successfully:', email);
+    console.log('Contact created successfully:', email);
 
     // Return success response
     return NextResponse.json(

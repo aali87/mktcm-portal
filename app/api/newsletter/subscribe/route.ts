@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Step 1: Create or update contact in Brevo
+    // Step 1: Try to create contact, or update if exists
     const contactResponse = await fetch(`${BREVO_API_URL}/contacts`, {
       method: 'POST',
       headers: {
@@ -65,30 +65,50 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         email: email,
         listIds: [NEWSLETTER_LIST_ID],
-        updateEnabled: true, // Update contact if already exists
+        updateEnabled: true,
       }),
     });
 
     const contactData: BrevoContactResponse = await contactResponse.json();
 
-    // Handle duplicate contact (already subscribed)
+    // Handle duplicate contact - fetch existing data and merge
     if (!contactResponse.ok && contactData.code === 'duplicate_parameter') {
-      console.log('Contact already exists:', email);
+      console.log('Contact already exists, performing upsert:', email);
 
-      // Try to update existing contact to ensure they're in the list
-      const updateResponse = await fetch(`${BREVO_API_URL}/contacts/${encodeURIComponent(email)}`, {
-        method: 'PUT',
+      // Fetch existing contact to preserve data
+      const getResponse = await fetch(`${BREVO_API_URL}/contacts/${encodeURIComponent(email)}`, {
+        method: 'GET',
         headers: {
           'api-key': brevoApiKey,
-          'content-type': 'application/json',
         },
-        body: JSON.stringify({
-          listIds: [NEWSLETTER_LIST_ID],
-        }),
       });
 
-      if (!updateResponse.ok) {
-        console.error('Failed to update existing contact:', await updateResponse.text());
+      if (getResponse.ok) {
+        const existingContact = await getResponse.json();
+        const existingListIds = existingContact.listIds || [];
+
+        // Merge list IDs - add to newsletter list if not already there
+        const updatedListIds = existingListIds.includes(NEWSLETTER_LIST_ID)
+          ? existingListIds
+          : [...existingListIds, NEWSLETTER_LIST_ID];
+
+        // Update contact with merged list IDs
+        const updateResponse = await fetch(`${BREVO_API_URL}/contacts/${encodeURIComponent(email)}`, {
+          method: 'PUT',
+          headers: {
+            'api-key': brevoApiKey,
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            listIds: updatedListIds,
+          }),
+        });
+
+        if (!updateResponse.ok) {
+          console.error('Failed to update existing contact:', await updateResponse.text());
+        } else {
+          console.log('Contact updated with list membership:', email);
+        }
       }
 
       return NextResponse.json(
@@ -109,7 +129,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('Contact created/updated successfully:', email);
+    console.log('Contact created successfully:', email);
 
     // Step 2: Send welcome email using template
     const emailResponse = await fetch(`${BREVO_API_URL}/smtp/email`, {
