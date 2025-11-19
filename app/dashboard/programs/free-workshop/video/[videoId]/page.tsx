@@ -81,6 +81,18 @@ export default async function VideoPlayerPage({ params }: VideoPageProps) {
 
   return (
     <div className="min-h-screen bg-neutral-900">
+      {/* Top Navigation */}
+      <div className="bg-neutral-800 border-b border-neutral-700">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <Link href="/dashboard/programs/free-workshop">
+            <Button variant="ghost" size="sm" className="text-neutral-300 hover:text-white">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Program
+            </Button>
+          </Link>
+        </div>
+      </div>
+
       <div className="max-w-6xl mx-auto">
         {/* Video Player Section */}
         <div className="bg-black">
@@ -93,12 +105,6 @@ export default async function VideoPlayerPage({ params }: VideoPageProps) {
         {/* Video Info Section */}
         <div className="bg-white px-6 py-8">
           <div className="max-w-4xl mx-auto">
-            <Link href="/dashboard/programs/free-workshop">
-              <Button variant="ghost" size="sm" className="gap-2 mb-4">
-                <ArrowLeft className="h-4 w-4" />
-                Back to Workshop
-              </Button>
-            </Link>
 
             <h1 className="font-serif text-3xl text-neutral-800 mb-2">
               {video.title}

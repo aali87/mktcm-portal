@@ -1,13 +1,17 @@
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand, HeadBucketCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-// Initialize S3 client
+// Initialize S3 client with explicit configuration
 const s3Client = new S3Client({
   region: process.env.AWS_REGION || 'us-east-1',
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
   },
+  // Force path-style URLs to avoid potential DNS issues with bucket names
+  forcePathStyle: false,
+  // Use virtual-hosted-style requests (default)
+  useAccelerateEndpoint: false,
 });
 
 const BUCKET_NAME = process.env.AWS_S3_BUCKET || '';
@@ -114,10 +118,25 @@ export async function getSignedPdfUrl(
   });
 
   try {
+    console.log('[S3] Generating signed URL for PDF:', {
+      bucket: BUCKET_NAME,
+      key: pdfKey,
+      region: process.env.AWS_REGION || 'us-east-1',
+      expiresIn,
+    });
+
     const signedUrl = await getSignedUrl(s3Client, command, { expiresIn });
+    console.log('[S3] Successfully generated signed URL');
     return signedUrl;
   } catch (error) {
-    console.error('Error generating signed PDF URL:', error);
+    console.error('[S3] Error generating signed PDF URL:', error);
+    console.error('[S3] Configuration:', {
+      bucket: BUCKET_NAME,
+      key: pdfKey,
+      region: process.env.AWS_REGION || 'us-east-1',
+      hasAccessKey: !!process.env.AWS_ACCESS_KEY_ID,
+      hasSecretKey: !!process.env.AWS_SECRET_ACCESS_KEY,
+    });
     throw new Error('Failed to generate signed URL for PDF');
   }
 }
