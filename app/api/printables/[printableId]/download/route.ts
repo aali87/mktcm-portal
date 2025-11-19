@@ -7,9 +7,9 @@ import { getSignedPdfUrl } from '@/lib/s3';
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
-export async function POST(
+async function handleDownload(
   request: NextRequest,
-  { params }: { params: { printableId: string } }
+  params: { printableId: string }
 ) {
   try {
     // Get the proper origin for redirects
@@ -101,4 +101,18 @@ export async function POST(
       new URL('/dashboard?error=download-failed', origin)
     );
   }
+}
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { printableId: string } }
+) {
+  return handleDownload(request, params);
+}
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { printableId: string } }
+) {
+  return handleDownload(request, params);
 }

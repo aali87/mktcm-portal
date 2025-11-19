@@ -91,12 +91,16 @@ export default async function FreePrintablesDashboard() {
               </p>
 
               {/* Download Button */}
-              <form action={`/api/printables/${printable.id}/download`} method="POST">
-                <Button type="submit" className="w-full">
+              <a
+                href={`/api/printables/${printable.id}/download`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button className="w-full">
                   <Download className="mr-2 h-4 w-4" />
                   Download PDF
                 </Button>
-              </form>
+              </a>
             </div>
           ))}
         </div>
