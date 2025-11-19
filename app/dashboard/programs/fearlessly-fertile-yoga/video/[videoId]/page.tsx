@@ -45,6 +45,16 @@ export default async function VideoPage({ params }: PageProps) {
     redirect(`/programs/${video.product.slug}`);
   }
 
+  // Get user's progress for this video
+  const userProgress = await prisma.userProgress.findUnique({
+    where: {
+      userId_videoId: {
+        userId: session.user.id,
+        videoId: video.id,
+      },
+    },
+  });
+
   // Get all videos in this product for navigation
   const allVideos = await prisma.video.findMany({
     where: { productId: video.productId },
@@ -84,7 +94,10 @@ export default async function VideoPage({ params }: PageProps) {
       {/* Video Player */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="aspect-video bg-black rounded-lg overflow-hidden mb-8">
-          <VideoPlayer videoId={video.id} />
+          <VideoPlayer
+            videoId={video.id}
+            initialProgress={userProgress?.progressPercent || 0}
+          />
         </div>
 
         {/* Video Info */}

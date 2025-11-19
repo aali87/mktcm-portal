@@ -45,6 +45,16 @@ export default async function StressFreeGoddessVideoPage({ params }: PageProps) 
     redirect("/programs/stress-free-goddess");
   }
 
+  // Get user's progress for this video
+  const userProgress = await prisma.userProgress.findUnique({
+    where: {
+      userId_videoId: {
+        userId: session.user.id,
+        videoId: video.id,
+      },
+    },
+  });
+
   // Get all videos in this product for navigation
   const allVideos = await prisma.video.findMany({
     where: {
@@ -95,7 +105,10 @@ export default async function StressFreeGoddessVideoPage({ params }: PageProps) 
 
         {/* Video Player */}
         <div className="mb-8">
-          <VideoPlayer videoId={video.id} />
+          <VideoPlayer
+            videoId={video.id}
+            initialProgress={userProgress?.progressPercent || 0}
+          />
         </div>
 
         {/* Navigation */}
