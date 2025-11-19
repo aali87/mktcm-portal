@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/db';
+import { sendPurchaseConfirmationEmail } from '@/lib/email';
 import Stripe from 'stripe';
 
 // Force dynamic rendering to prevent build-time execution
@@ -138,9 +139,29 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   console.log('Purchase created:', purchase.id, { paymentType, subscriptionId });
 
-  // TODO: Send purchase confirmation email via Resend
-  // This will be implemented in the next phase
-  console.log('TODO: Send purchase confirmation email to user');
+  // Send purchase confirmation email
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (user) {
+      const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/programs/${product.slug}`;
+
+      await sendPurchaseConfirmationEmail(
+        user.email,
+        user.name || 'there',
+        product.name,
+        purchase.amount,
+        dashboardUrl
+      );
+
+      console.log('[Webhook] Purchase confirmation email sent:', user.email);
+    }
+  } catch (emailError) {
+    // Don't fail the webhook if email fails
+    console.error('[Webhook] Error sending purchase confirmation email:', emailError);
+  }
 }
 
 async function handleCheckoutFailed(session: Stripe.Checkout.Session) {

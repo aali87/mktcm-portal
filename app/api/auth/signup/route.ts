@@ -1,12 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { hashPassword } from "@/lib/auth";
+import { addContactToBrevo, sendWelcomeEmail } from "@/lib/email";
 import { z } from "zod";
-
-// Brevo API configuration
-const BREVO_API_URL = 'https://api.brevo.com/v3';
-const PORTAL_USERS_LIST_ID = 9;
-const WELCOME_EMAIL_TEMPLATE_ID = 2; // Portal welcome email template
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -52,55 +48,26 @@ export async function POST(req: Request) {
     });
 
     // Add user to Brevo and send welcome email
-    const brevoApiKey = process.env.BREVO_API_KEY;
-    if (brevoApiKey) {
-      try {
-        // Split name into first and last name
-        const nameParts = validatedData.name.split(' ');
-        const firstName = nameParts[0] || validatedData.name;
-        const lastName = nameParts.slice(1).join(' ') || '';
+    try {
+      // Split name into first and last name
+      const nameParts = validatedData.name.split(' ');
+      const firstName = nameParts[0] || validatedData.name;
+      const lastName = nameParts.slice(1).join(' ') || '';
 
-        // Add contact to Brevo list
-        await fetch(`${BREVO_API_URL}/contacts`, {
-          method: 'POST',
-          headers: {
-            'api-key': brevoApiKey,
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: validatedData.email,
-            attributes: {
-              FIRSTNAME: firstName,
-              LASTNAME: lastName,
-            },
-            listIds: [PORTAL_USERS_LIST_ID],
-            updateEnabled: true,
-          }),
-        });
+      // Add contact to Brevo list
+      await addContactToBrevo({
+        email: validatedData.email,
+        firstName,
+        lastName,
+      });
 
-        // Send welcome email
-        await fetch(`${BREVO_API_URL}/smtp/email`, {
-          method: 'POST',
-          headers: {
-            'api-key': brevoApiKey,
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            to: [{
-              email: validatedData.email,
-              name: validatedData.name,
-            }],
-            templateId: WELCOME_EMAIL_TEMPLATE_ID,
-          }),
-        });
+      // Send welcome email
+      await sendWelcomeEmail(validatedData.email, validatedData.name);
 
-        console.log('User added to Brevo and welcome email sent:', validatedData.email);
-      } catch (brevoError) {
-        // Don't fail signup if Brevo fails - just log the error
-        console.error('Brevo error during signup:', brevoError);
-      }
-    } else {
-      console.warn('BREVO_API_KEY not set - skipping Brevo integration');
+      console.log('[Signup] User added to Brevo and welcome email sent:', validatedData.email);
+    } catch (brevoError) {
+      // Don't fail signup if Brevo fails - just log the error
+      console.error('[Signup] Brevo error during signup:', brevoError);
     }
 
     return NextResponse.json(
