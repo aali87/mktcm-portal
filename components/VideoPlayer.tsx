@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Loader2 } from 'lucide-react';
 
 console.log('[VideoPlayer] MODULE LOADED - This should appear if JavaScript is running at all');
@@ -79,7 +79,7 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
   }, [videoUrl, initialProgress]);
 
   // Update progress
-  const updateProgress = async () => {
+  const updateProgress = useCallback(async () => {
     if (!videoRef.current) {
       console.log('[VideoPlayer] updateProgress called but no video ref');
       return;
@@ -108,7 +108,7 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
     } catch (err) {
       console.error('[VideoPlayer] Error updating progress:', err);
     }
-  };
+  }, [videoId]);
 
   // Track progress every 10 seconds while playing
   useEffect(() => {
@@ -174,7 +174,7 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
         clearInterval(progressUpdateIntervalRef.current);
       }
     };
-  }, [videoId, videoUrl]);
+  }, [videoId, videoUrl, updateProgress]);
 
   // Disable right-click context menu
   const handleContextMenu = (e: React.MouseEvent) => {
