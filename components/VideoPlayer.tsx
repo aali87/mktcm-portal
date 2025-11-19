@@ -3,12 +3,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 
+console.log('[VideoPlayer] MODULE LOADED - This should appear if JavaScript is running at all');
+
 interface VideoPlayerProps {
   videoId: string;
   initialProgress?: number;
 }
 
 export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlayerProps) {
+  console.log('[VideoPlayer] COMPONENT RENDERING - videoId:', videoId, 'initialProgress:', initialProgress);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
