@@ -159,9 +159,24 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
       updateProgress();
     };
 
+    // Save progress when user navigates away or closes tab
+    const handleBeforeUnload = () => {
+      console.log('[VideoPlayer] Page unloading - saving progress');
+      // Only save if video has started playing
+      if (hasStarted && video.currentTime > 0) {
+        // Use sendBeacon for reliability during page unload
+        const progressPercent = Math.min((video.currentTime / video.duration) * 100, 100);
+        const data = JSON.stringify({ progressPercent: Math.round(progressPercent) });
+        // Create a Blob with correct content type
+        const blob = new Blob([data], { type: 'application/json' });
+        navigator.sendBeacon(`/api/videos/${videoId}/progress`, blob);
+      }
+    };
+
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('ended', handleEnded);
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
     console.log('[VideoPlayer] Event listeners attached for videoId:', videoId);
 
@@ -169,12 +184,13 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
       video.removeEventListener('play', handlePlay);
       video.removeEventListener('pause', handlePause);
       video.removeEventListener('ended', handleEnded);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
 
       if (progressUpdateIntervalRef.current) {
         clearInterval(progressUpdateIntervalRef.current);
       }
     };
-  }, [videoId, videoUrl, updateProgress]);
+  }, [videoId, videoUrl, updateProgress, hasStarted]);
 
   // Disable right-click context menu
   const handleContextMenu = (e: React.MouseEvent) => {
