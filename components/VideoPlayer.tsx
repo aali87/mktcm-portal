@@ -161,7 +161,7 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
 
     // Save progress when user navigates away or closes tab
     const handleBeforeUnload = () => {
-      console.log('[VideoPlayer] Page unloading - saving progress');
+      console.log('[VideoPlayer] beforeunload - saving progress');
       // Only save if video has started playing
       if (hasStarted && video.currentTime > 0) {
         // Use sendBeacon for reliability during page unload
@@ -173,18 +173,41 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
       }
     };
 
+    // Save progress when tab becomes hidden (user switches tabs or navigates away)
+    const handleVisibilityChange = () => {
+      if (document.hidden && hasStarted && video.currentTime > 0) {
+        console.log('[VideoPlayer] Page hidden - saving progress');
+        const progressPercent = Math.min((video.currentTime / video.duration) * 100, 100);
+        const data = JSON.stringify({ progressPercent: Math.round(progressPercent) });
+        const blob = new Blob([data], { type: 'application/json' });
+        navigator.sendBeacon(`/api/videos/${videoId}/progress`, blob);
+      }
+    };
+
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('ended', handleEnded);
     window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     console.log('[VideoPlayer] Event listeners attached for videoId:', videoId);
 
     return () => {
+      console.log('[VideoPlayer] Component unmounting - saving progress before cleanup');
+
+      // Save progress on unmount (when navigating away via Next.js routing)
+      if (hasStarted && video.currentTime > 0) {
+        const progressPercent = Math.min((video.currentTime / video.duration) * 100, 100);
+        const data = JSON.stringify({ progressPercent: Math.round(progressPercent) });
+        const blob = new Blob([data], { type: 'application/json' });
+        navigator.sendBeacon(`/api/videos/${videoId}/progress`, blob);
+      }
+
       video.removeEventListener('play', handlePlay);
       video.removeEventListener('pause', handlePause);
       video.removeEventListener('ended', handleEnded);
       window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
 
       if (progressUpdateIntervalRef.current) {
         clearInterval(progressUpdateIntervalRef.current);
