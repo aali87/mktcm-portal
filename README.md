@@ -1,216 +1,173 @@
-# TCM Fertility Member Portal & E-Commerce Platform
+# MKTCM Fertility Portal
 
-A modern, full-stack member portal and e-commerce platform for a Traditional Chinese Medicine fertility practice. Built with Next.js 14, TypeScript, PostgreSQL, and Stripe.
+A modern, secure member portal and e-commerce platform for a Traditional Chinese Medicine fertility practice. Built with Next.js 14, TypeScript, PostgreSQL, and Stripe.
 
 ## Features
 
-### Phase 1 (Current)
-- ✅ User authentication (email/password signup, login, password reset)
-- ✅ Product catalog with 5 programs
-- ✅ Member dashboard with purchase tracking
-- ✅ Clean, calming design aesthetic matching Framer site
-- ✅ PostgreSQL database with Prisma ORM
+### Core Functionality
+- ✅ Secure user authentication (email/password with password reset)
+- ✅ Stripe payment integration (one-time and payment plans)
+- ✅ Product catalog with multiple programs
+- ✅ Protected video streaming with progress tracking
+- ✅ Interactive workbook viewer with page navigation
+- ✅ Downloadable PDF printables
+- ✅ Bonus content gating based on payment type
+- ✅ Automated transactional emails (Brevo)
+- ✅ Member dashboard with purchase history
 - ✅ Responsive design (mobile-first)
-- 🚧 Stripe checkout (integration ready)
-- 🚧 Video delivery & progress tracking
-- 🚧 Email automation with Resend
+
+### Security Features
+- ✅ All protected content requires authentication and purchase verification
+- ✅ Duplicate purchase prevention
+- ✅ Secure password hashing (bcrypt)
+- ✅ Signed S3 URLs with expiration
+- ✅ Stripe webhook signature verification
+- ✅ SQL injection protection (Prisma ORM)
+- ✅ Input validation (Zod schemas)
+- ✅ No XSS vulnerabilities
 
 ## Tech Stack
 
-- **Framework:** Next.js 14 (App Router)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS + Shadcn/ui components
-- **Database:** PostgreSQL (via Railway)
-- **ORM:** Prisma
-- **Authentication:** NextAuth.js
-- **Payments:** Stripe
-- **Email:** Resend
-- **Fonts:** Inter (sans-serif), Crimson Text (serif)
+- **Framework**: Next.js 14 (App Router) with TypeScript
+- **Styling**: Tailwind CSS + Shadcn/ui components
+- **Database**: PostgreSQL (Railway) with Prisma ORM
+- **Authentication**: NextAuth.js
+- **Payments**: Stripe (checkout + webhooks)
+- **Email**: Brevo API (transactional emails)
+- **Storage**: AWS S3 (videos, workbooks, printables)
+- **Hosting**: Railway
 
-## Design System
-
-### Colors
-- **Primary:** `#7fa69b` (Sage green)
-- **Neutral:** Warm grays and creams
-- **Background:** White to light beige gradient
-
-### Typography
-- **Headings:** Crimson Text (serif)
-- **Body:** Inter (sans-serif)
-- **Hierarchy:** Clean, spacious, calming
-
-## Getting Started
+## Quick Start
 
 ### Prerequisites
-- Node.js 18+ installed
-- PostgreSQL database (Railway recommended)
+- Node.js 18+
+- PostgreSQL database
 - Stripe account
-- Resend account (for emails)
+- Brevo account
+- AWS S3 bucket
 
 ### Installation
 
-1. **Clone and install dependencies:**
-   ```bash
-   npm install
-   ```
+```bash
+# Install dependencies
+npm install
 
-2. **Set up environment variables:**
-   ```bash
-   cp .env.example .env
-   ```
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your credentials
 
-   Edit `.env` and add:
-   ```env
-   DATABASE_URL="postgresql://user:password@host:port/database"
-   NEXTAUTH_SECRET="your-generated-secret"
-   NEXTAUTH_URL="http://localhost:3000"
-   STRIPE_SECRET_KEY="sk_test_..."
-   STRIPE_PUBLISHABLE_KEY="pk_test_..."
-   RESEND_API_KEY="re_..."
-   ```
+# Run database migrations
+npx prisma migrate dev
+npx prisma generate
 
-   Generate a secret for `NEXTAUTH_SECRET`:
-   ```bash
-   openssl rand -base64 32
-   ```
+# Start development server
+npm run dev
+```
 
-3. **Set up the database:**
-   ```bash
-   # Generate Prisma Client
-   npx prisma generate
+Visit `http://localhost:3000`
 
-   # Run database migrations
-   npx prisma migrate dev --name init
+## Deployment
 
-   # Seed the database with products
-   npx ts-node --compiler-options {"module":"CommonJS"} lib/db/seed.ts
-   ```
+See [PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md) for complete deployment guide.
 
-4. **Run the development server:**
-   ```bash
-   npm run dev
-   ```
+### Quick Deployment Steps
 
-   Open [http://localhost:3000](http://localhost:3000)
-
-## Database Schema
-
-### Core Models
-- **User** - User accounts with authentication
-- **Product** - Programs and digital products
-- **Purchase** - Purchase transactions
-- **Video** - Video content for programs
-- **UserProgress** - Video watch progress tracking
-- **Workbook** - Downloadable resources
-- **EmailDelivery** - Email automation tracking
-
-See [prisma/schema.prisma](prisma/schema.prisma) for full schema.
+1. **Set environment variables** in Railway/hosting provider
+2. **Run migrations**: `npx prisma migrate deploy`
+3. **Configure Stripe webhook**: `https://yourdomain.com/api/webhooks/stripe`
+4. **Verify email sender** in Brevo
+5. **Upload content** to S3
+6. **Deploy**: `git push`
 
 ## Project Structure
 
 ```
-/app
-  /auth              # Authentication pages (login, signup, reset)
-  /dashboard         # Protected member dashboard
-  /programs          # Product catalog and program pages
-  /api
-    /auth            # NextAuth & signup API
-    /stripe          # Stripe webhooks (TODO)
-/components
-  /ui                # Shadcn UI components
-  /layout            # Header, Footer
-/lib
-  /auth              # NextAuth configuration
-  /db                # Prisma client & seed
-  /stripe            # Stripe utilities (TODO)
-  /email             # Resend email templates (TODO)
-/prisma              # Database schema & migrations
+├── app/
+│   ├── api/              # API routes
+│   ├── auth/             # Authentication pages
+│   ├── dashboard/        # Protected member area
+│   └── programs/         # Public program pages
+├── components/           # React components
+├── lib/                  # Utilities & configurations
+├── prisma/              # Database schema & migrations
+└── public/              # Static assets
 ```
 
-## Products
+## Key API Routes
 
-1. **Free Workshop** - 3 introductory videos (Free)
-2. **Optimal Fertility Blueprint** - 9-week program with workbooks ($149)
-3. **Stress-free Goddess Program** - Stress management ($29)
-4. **Fearlessly Fertile Yoga** - Yoga sequences ($15)
-5. **Free Printables** - Downloadable resources (Free)
+- `/api/auth/signup` - User registration
+- `/api/auth/forgot-password` - Password reset request
+- `/api/auth/reset-password` - Password reset confirmation
+- `/api/checkout` - Create Stripe checkout session
+- `/api/webhooks/stripe` - Handle Stripe events
+- `/api/videos/[videoId]/url` - Get signed video URL
+- `/api/workbooks/[workbookId]/pages` - Get workbook pages
+- `/api/printables/[printableId]/download` - Download PDF
 
-## Deployment
+## Environment Variables
 
-### Railway (Recommended)
+See [.env.example](./.env.example) for complete list.
 
-1. **Create new project on Railway**
-2. **Add PostgreSQL database**
-3. **Deploy from GitHub:**
-   - Connect your repository
-   - Add environment variables
-   - Railway will auto-deploy on push
+Required:
+- `DATABASE_URL` - PostgreSQL connection string
+- `NEXTAUTH_SECRET` - NextAuth.js secret
+- `STRIPE_SECRET_KEY` - Stripe secret key
+- `BREVO_API_KEY` - Brevo API key
+- `AWS_ACCESS_KEY_ID` - AWS credentials
+- `AWS_S3_BUCKET` - S3 bucket name
 
-4. **Run database migrations:**
-   ```bash
-   railway run npx prisma migrate deploy
-   railway run npx ts-node --compiler-options {"module":"CommonJS"} lib/db/seed.ts
-   ```
-
-### Environment Variables for Production
-Make sure to set all variables from `.env.example` in Railway dashboard.
-
-## Next Steps (TODO)
-
-### Stripe Integration
-- [ ] Create Stripe checkout sessions
-- [ ] Handle payment success/failure
-- [ ] Implement webhook handlers
-- [ ] Auto-grant access after payment
-- [ ] Payment plan support
-
-### Video Delivery
-- [ ] Set up video storage (S3 or Railway volumes)
-- [ ] Implement secure video player
-- [ ] Track watch progress
-- [ ] Resume playback functionality
-
-### Email Automation
-- [ ] Welcome email on signup
-- [ ] Purchase confirmation emails
-- [ ] Weekly workbook delivery (Blueprint program)
-- [ ] Password reset emails
-
-### Additional Features
-- [ ] User profile page
-- [ ] Password change functionality
-- [ ] Admin dashboard for content management
-- [ ] Analytics and reporting
-- [ ] Review/testimonial system
-
-## Scripts
+## Development Commands
 
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
+# Start dev server
+npm run dev
 
-# Prisma commands
-npx prisma studio    # Open Prisma Studio (DB GUI)
-npx prisma generate  # Generate Prisma Client
-npx prisma migrate dev  # Create & run migrations
+# Build for production
+npm run build
+
+# Run production build
+npm start
+
+# Database
+npx prisma studio          # Open Prisma Studio
+npx prisma migrate dev     # Create & apply migration
+npx prisma generate        # Generate Prisma Client
+
+# Utilities
+npm run lint               # Run ESLint
+npx tsx scripts/clear-data.ts  # Clear user data
 ```
 
-## Security Considerations
+## Business Logic
 
-- ✅ Passwords hashed with bcrypt
-- ✅ Protected routes with NextAuth middleware
-- ✅ Input validation with Zod
-- ✅ SQL injection protection via Prisma
-- 🚧 CSRF protection (configure in production)
-- 🚧 Rate limiting (add for production)
-- 🚧 Content Security Policy headers
+### Purchase Flow
+1. User creates account (free)
+2. User browses programs
+3. User selects payment option (one-time or plan)
+4. Stripe handles payment
+5. Webhook creates purchase record
+6. User gains access to content
+
+### Bonus Workbook Access
+- **One-time payment**: Instant access
+- **Payment plan**: Access after 3rd payment
+
+### Content Protection
+- Videos: Purchase verification + signed S3 URLs
+- Workbooks: Purchase + bonus eligibility check
+- Printables: Purchase verification
 
 ## Support
 
-For questions or issues, please contact the development team.
+- **Issues**: Report bugs via GitHub Issues
+- **Documentation**: See [PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md)
+- **Project Summary**: See [PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md)
+
+## License
+
+Private - All rights reserved
 
 ---
 
-Built with ❤️ for fertility journeys
+**Status**: Production Ready ✅
+**Last Updated**: November 19, 2024
