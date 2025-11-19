@@ -76,13 +76,22 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
 
   // Update progress
   const updateProgress = async () => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+      console.log('[VideoPlayer] updateProgress called but no video ref');
+      return;
+    }
 
     const video = videoRef.current;
     const progressPercent = (video.currentTime / video.duration) * 100;
 
+    console.log('[VideoPlayer] updateProgress called:', {
+      currentTime: video.currentTime,
+      duration: video.duration,
+      progressPercent: Math.round(progressPercent),
+    });
+
     try {
-      await fetch(`/api/videos/${videoId}/progress`, {
+      const response = await fetch(`/api/videos/${videoId}/progress`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,8 +100,9 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
           progressPercent: Math.min(progressPercent, 100),
         }),
       });
+      console.log('[VideoPlayer] Progress API response:', response.status, response.ok);
     } catch (err) {
-      console.error('Error updating progress:', err);
+      console.error('[VideoPlayer] Error updating progress:', err);
     }
   };
 
@@ -102,6 +112,7 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
     if (!video) return;
 
     const handlePlay = () => {
+      console.log('[VideoPlayer] Play event fired');
       setHasStarted(true);
 
       // Clear any existing interval
@@ -110,12 +121,15 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
       }
 
       // Update progress every 10 seconds
+      console.log('[VideoPlayer] Starting progress interval');
       progressUpdateIntervalRef.current = setInterval(() => {
+        console.log('[VideoPlayer] Interval tick - calling updateProgress');
         updateProgress();
       }, 10000);
     };
 
     const handlePause = () => {
+      console.log('[VideoPlayer] Pause event fired - saving progress');
       // Clear interval when paused
       if (progressUpdateIntervalRef.current) {
         clearInterval(progressUpdateIntervalRef.current);
@@ -127,6 +141,7 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
     };
 
     const handleEnded = () => {
+      console.log('[VideoPlayer] Video ended - saving final progress');
       // Clear interval when video ends
       if (progressUpdateIntervalRef.current) {
         clearInterval(progressUpdateIntervalRef.current);
@@ -140,6 +155,8 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('ended', handleEnded);
+
+    console.log('[VideoPlayer] Event listeners attached for videoId:', videoId);
 
     return () => {
       video.removeEventListener('play', handlePlay);
