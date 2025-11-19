@@ -106,7 +106,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return;
   }
 
-  // Determine payment type based on price ID
+  // Determine payment type from metadata or session mode
+  const { priceType: metadataPriceType } = session.metadata || {};
   let paymentType: 'FULL' | 'PLAN' | null = null;
   let subscriptionId: string | null = null;
 
@@ -114,11 +115,11 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     paymentType = 'PLAN';
     subscriptionId = session.subscription as string;
   } else if (session.mode === 'payment') {
-    // Check which price ID was used
-    if (product.priceId && session.metadata?.priceId === product.priceId) {
-      paymentType = 'FULL';
-    } else if (product.paymentPlanPriceId && session.metadata?.priceId === product.paymentPlanPriceId) {
+    // Use metadata priceType if available, otherwise default to FULL
+    if (metadataPriceType === 'payment-plan') {
       paymentType = 'PLAN';
+    } else {
+      paymentType = 'FULL';
     }
   }
 

@@ -7,7 +7,7 @@ import { Footer } from "@/components/layout/footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Play, Download, BookOpen } from "lucide-react";
+import { Play, BookOpen } from "lucide-react";
 import Link from "next/link";
 
 export default async function DashboardPage() {
@@ -119,16 +119,7 @@ export default async function DashboardPage() {
 
                   {/* Actions */}
                   <div className="space-y-3">
-                    {product.workbooks.length > 0 && (
-                      <Link href={`/programs/${product.slug}/workbooks`}>
-                        <Button variant="outline" className="w-full gap-2">
-                          <Download className="h-4 w-4" />
-                          Workbooks
-                        </Button>
-                      </Link>
-                    )}
-
-                    <Link href={`/programs/${product.slug}`}>
+                    <Link href={`/dashboard/programs/${product.slug}`}>
                       <Button className="w-full gap-2">
                         <BookOpen className="h-4 w-4" />
                         View Program
