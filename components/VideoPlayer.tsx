@@ -45,15 +45,28 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
     if (videoRef.current && videoUrl && initialProgress > 0) {
       const video = videoRef.current;
 
+      console.log('[VideoPlayer] Setting up initial progress:', initialProgress);
+
       // Wait for metadata to load before setting current time
       const handleLoadedMetadata = () => {
+        console.log('[VideoPlayer] Metadata loaded, video duration:', video.duration);
         if (initialProgress < 90) {
           const startTime = (initialProgress / 100) * video.duration;
+          console.log('[VideoPlayer] Setting currentTime to:', startTime, 'seconds');
           video.currentTime = startTime;
+        } else {
+          console.log('[VideoPlayer] Progress >= 90%, starting from beginning');
         }
       };
 
-      video.addEventListener('loadedmetadata', handleLoadedMetadata);
+      // If metadata is already loaded, set currentTime immediately
+      if (video.readyState >= 1) {
+        console.log('[VideoPlayer] Metadata already loaded');
+        handleLoadedMetadata();
+      } else {
+        console.log('[VideoPlayer] Waiting for metadata to load');
+        video.addEventListener('loadedmetadata', handleLoadedMetadata);
+      }
 
       return () => {
         video.removeEventListener('loadedmetadata', handleLoadedMetadata);
