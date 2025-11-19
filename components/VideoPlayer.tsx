@@ -113,7 +113,10 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
   // Track progress every 10 seconds while playing
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video) {
+      console.log('[VideoPlayer] Event listener useEffect: video ref is null, waiting for video element to render');
+      return;
+    }
 
     const handlePlay = () => {
       console.log('[VideoPlayer] Play event fired');
@@ -171,7 +174,7 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
         clearInterval(progressUpdateIntervalRef.current);
       }
     };
-  }, [videoId]);
+  }, [videoId, videoUrl]);
 
   // Disable right-click context menu
   const handleContextMenu = (e: React.MouseEvent) => {
