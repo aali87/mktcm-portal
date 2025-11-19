@@ -127,6 +127,8 @@ export async function getSignedPdfUrl(
 
     const signedUrl = await getSignedUrl(s3Client, command, { expiresIn });
     console.log('[S3] Successfully generated signed URL');
+    console.log('[S3] URL preview:', signedUrl.substring(0, 100) + '...');
+    console.log('[S3] URL contains ca-central-1?', signedUrl.includes('ca-central-1'));
     return signedUrl;
   } catch (error) {
     console.error('[S3] Error generating signed PDF URL:', error);
