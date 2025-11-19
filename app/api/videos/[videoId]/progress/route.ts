@@ -59,6 +59,12 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       );
     }
 
+    console.log('[API] Saving video progress:', {
+      userId: user.id,
+      videoId: params.videoId,
+      progressPercent: Math.round(progressPercent),
+    });
+
     // Upsert user progress
     const userProgress = await prisma.userProgress.upsert({
       where: {
@@ -78,6 +84,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         lastWatchedAt: new Date(),
       },
     });
+
+    console.log('[API] Video progress saved successfully:', userProgress.progressPercent);
 
     return NextResponse.json({
       success: true,

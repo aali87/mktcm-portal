@@ -55,6 +55,13 @@ export default async function VideoPage({ params }: PageProps) {
     },
   });
 
+  console.log('[Server] User progress for video:', {
+    videoId: video.id,
+    userId: session.user.id,
+    progressPercent: userProgress?.progressPercent || 0,
+    hasProgress: !!userProgress,
+  });
+
   // Get all videos in this product for navigation
   const allVideos = await prisma.video.findMany({
     where: { productId: video.productId },
