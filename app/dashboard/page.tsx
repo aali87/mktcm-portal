@@ -118,16 +118,7 @@ export default async function DashboardPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="grid grid-cols-2 gap-3">
-                    {totalVideos > 0 && (
-                      <Link href={`/programs/${product.slug}/videos`}>
-                        <Button variant="outline" className="w-full gap-2">
-                          <Play className="h-4 w-4" />
-                          Watch Videos
-                        </Button>
-                      </Link>
-                    )}
-
+                  <div className="space-y-3">
                     {product.workbooks.length > 0 && (
                       <Link href={`/programs/${product.slug}/workbooks`}>
                         <Button variant="outline" className="w-full gap-2">
@@ -136,14 +127,14 @@ export default async function DashboardPage() {
                         </Button>
                       </Link>
                     )}
-                  </div>
 
-                  <Link href={`/programs/${product.slug}`}>
-                    <Button className="w-full gap-2">
-                      <BookOpen className="h-4 w-4" />
-                      View Program
-                    </Button>
-                  </Link>
+                    <Link href={`/programs/${product.slug}`}>
+                      <Button className="w-full gap-2">
+                        <BookOpen className="h-4 w-4" />
+                        View Program
+                      </Button>
+                    </Link>
+                  </div>
                 </CardContent>
               </Card>
             ))}
