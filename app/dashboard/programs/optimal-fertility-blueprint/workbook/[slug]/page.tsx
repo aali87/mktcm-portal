@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { WorkbookViewer } from "@/components/WorkbookViewer";
+import { PdfWorkbookViewer } from "@/components/PdfWorkbookViewer";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -55,8 +56,11 @@ export default async function WorkbookPage({ params }: PageProps) {
     }
   }
 
-  // Validate workbook content
-  if (!workbook.s3FolderPath || !workbook.totalPages) {
+  // Validate workbook content - must have either PDF or images
+  const hasPdf = !!workbook.fileUrl;
+  const hasImages = !!workbook.s3FolderPath && !!workbook.totalPages;
+
+  if (!hasPdf && !hasImages) {
     return (
       <div className="min-h-screen bg-neutral-50">
         <div className="max-w-5xl mx-auto px-6 py-12">
@@ -120,12 +124,19 @@ export default async function WorkbookPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Workbook Viewer */}
-        <WorkbookViewer
-          workbookId={workbook.id}
-          totalPages={workbook.totalPages}
-          initialPage={initialPage}
-        />
+        {/* Workbook Viewer - PDF or Image based */}
+        {hasPdf ? (
+          <PdfWorkbookViewer
+            workbookId={workbook.id}
+            initialPage={initialPage}
+          />
+        ) : (
+          <WorkbookViewer
+            workbookId={workbook.id}
+            totalPages={workbook.totalPages!}
+            initialPage={initialPage}
+          />
+        )}
       </div>
     </div>
   );

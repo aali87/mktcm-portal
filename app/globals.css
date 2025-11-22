@@ -56,3 +56,54 @@
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-primary/50;
 }
+
+/* React-PDF styles */
+.react-pdf__Page {
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.react-pdf__Page__canvas {
+  margin: 0 auto;
+  display: block;
+}
+
+/* PDF annotation layer styles for clickable links */
+.react-pdf__Page__annotations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.react-pdf__Page__annotations .linkAnnotation > a {
+  cursor: pointer;
+  opacity: 0.2;
+  transition: opacity 0.2s;
+}
+
+.react-pdf__Page__annotations .linkAnnotation > a:hover {
+  opacity: 0.4;
+  background: rgba(127, 166, 155, 0.1);
+}
+
+/* PDF text layer for text selection */
+.react-pdf__Page__textContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  opacity: 0.2;
+  line-height: 1;
+}
+
+.react-pdf__Page__textContent span {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
