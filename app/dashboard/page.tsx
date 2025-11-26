@@ -100,12 +100,12 @@ export default async function DashboardPage() {
         ) : (
           <div className="grid md:grid-cols-2 gap-6">
             {programProgress.map(({ product, totalVideos, completedVideos, progressPercent }: typeof programProgress[number]) => (
-              <Card key={product.id} className="hover:border-primary transition-colors">
+              <Card key={product.id} className="hover:border-primary transition-colors flex flex-col">
                 <CardHeader>
                   <CardTitle className="font-serif text-xl">{product.name}</CardTitle>
                   <CardDescription>{product.description}</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-6 flex-1 flex flex-col">
                   {/* Progress */}
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
@@ -116,6 +116,9 @@ export default async function DashboardPage() {
                     </div>
                     <Progress value={progressPercent} />
                   </div>
+
+                  {/* Spacer to push button to bottom */}
+                  <div className="flex-1" />
 
                   {/* Actions */}
                   <div className="space-y-3">

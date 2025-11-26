@@ -69,7 +69,7 @@ export default async function ProgramsPage() {
                 return (
                   <Card
                     key={product.id}
-                    className="hover:border-primary transition-all hover:shadow-lg"
+                    className="hover:border-primary transition-all hover:shadow-lg flex flex-col"
                   >
                     <CardHeader>
                       <div className="flex items-start justify-between mb-2">
@@ -85,7 +85,7 @@ export default async function ProgramsPage() {
                       <CardDescription>{product.description}</CardDescription>
                     </CardHeader>
 
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-4 flex-1 flex flex-col">
                       {/* What's included */}
                       <div className="space-y-2">
                         {product.videos.length > 0 && (
@@ -106,30 +106,33 @@ export default async function ProgramsPage() {
                         </div>
                       </div>
 
-                      {/* Price */}
-                      <div className="pt-4 border-t border-neutral-100">
-                        {isFree ? (
-                          <span className="text-2xl font-serif text-neutral-800">Free</span>
-                        ) : (
-                          <div>
-                            <span className="text-3xl font-serif text-neutral-800">
-                              {formatCurrency(product.price / 100)}
-                            </span>
-                            {product.paymentPlanPriceId && (
-                              <p className="text-sm text-neutral-600 mt-1">
-                                Payment plans available
-                              </p>
-                            )}
-                          </div>
-                        )}
-                      </div>
+                      {/* Price - hide for purchased products, use flex-grow to push to bottom */}
+                      <div className="flex-1" />
+                      {!isPurchased && (
+                        <div className="pt-4 border-t border-neutral-100">
+                          {isFree ? (
+                            <span className="text-2xl font-serif text-neutral-800">Free</span>
+                          ) : (
+                            <div>
+                              <span className="text-3xl font-serif text-neutral-800">
+                                {formatCurrency(product.price / 100)}
+                              </span>
+                              {product.paymentPlanPriceId && (
+                                <p className="text-sm text-neutral-600 mt-1">
+                                  Payment plans available
+                                </p>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </CardContent>
 
                     <CardFooter>
                       {isPurchased ? (
-                        <Link href={`/programs/${product.slug}`} className="w-full">
+                        <Link href={`/dashboard/programs/${product.slug}`} className="w-full">
                           <Button className="w-full gap-2">
-                            Access Program
+                            Go to Program
                             <ArrowRight className="h-4 w-4" />
                           </Button>
                         </Link>
@@ -161,7 +164,7 @@ export default async function ProgramsPage() {
                 return (
                   <Card
                     key={product.id}
-                    className="hover:border-primary transition-all hover:shadow-md"
+                    className="hover:border-primary transition-all hover:shadow-md flex flex-col"
                   >
                     <CardHeader>
                       <CardTitle className="font-serif text-lg">
@@ -174,30 +177,39 @@ export default async function ProgramsPage() {
                       )}
                     </CardHeader>
 
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-4 flex-1 flex flex-col">
                       <p className="text-sm text-neutral-600 line-clamp-3">
                         {product.description}
                       </p>
 
-                      <div className="pt-2">
-                        {isFree ? (
-                          <span className="text-xl font-serif text-neutral-800">Free</span>
-                        ) : (
-                          <span className="text-2xl font-serif text-neutral-800">
-                            {formatCurrency(product.price / 100)}
-                          </span>
-                        )}
-                      </div>
+                      {/* Spacer to push content to bottom */}
+                      <div className="flex-1" />
+
+                      {/* Price - hide for purchased products */}
+                      {!isPurchased && (
+                        <div className="pt-2">
+                          {isFree ? (
+                            <span className="text-xl font-serif text-neutral-800">Free</span>
+                          ) : (
+                            <span className="text-2xl font-serif text-neutral-800">
+                              {formatCurrency(product.price / 100)}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </CardContent>
 
                     <CardFooter>
-                      <Link href={`/programs/${product.slug}`} className="w-full">
+                      <Link
+                        href={isPurchased ? `/dashboard/programs/${product.slug}` : `/programs/${product.slug}`}
+                        className="w-full"
+                      >
                         <Button
                           variant={isPurchased ? "default" : "outline"}
                           className="w-full"
                         >
                           {isPurchased
-                            ? "Access"
+                            ? "Go to Program"
                             : isFree
                             ? "Get Free Access"
                             : "View Details"}

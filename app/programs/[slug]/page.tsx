@@ -76,40 +76,44 @@ export default async function ProgramPage({ params, searchParams }: ProgramPageP
 
         {/* Price and CTA */}
         <div className="bg-white rounded-lg border border-neutral-200 p-8 mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              {isFree ? (
-                <span className="text-3xl font-semibold text-primary">Free</span>
-              ) : (
-                <>
-                  <span className="text-3xl font-semibold text-neutral-900">
-                    ${(product.price / 100).toFixed(0)}
-                  </span>
-                  {hasPaymentPlan && (
-                    <p className="text-sm text-neutral-600 mt-1">
-                      Or 3 payments of $59/month
-                    </p>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
-
           {userOwnsProduct ? (
-            <a
-              href="/dashboard"
-              className="inline-flex items-center justify-center w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium"
-            >
-              Access Your Program
-            </a>
+            <div className="text-center">
+              <p className="text-lg text-neutral-600 mb-4">You have access to this program</p>
+              <a
+                href={`/dashboard/programs/${product.slug}`}
+                className="inline-flex items-center justify-center w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium"
+              >
+                Go to Program
+              </a>
+            </div>
           ) : (
-            <EnrollButton
-              productId={product.id}
-              productSlug={product.slug}
-              hasPaymentPlan={hasPaymentPlan}
-              isFree={isFree}
-              isLoggedIn={!!session?.user}
-            />
+            <>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  {isFree ? (
+                    <span className="text-3xl font-semibold text-primary">Free</span>
+                  ) : (
+                    <>
+                      <span className="text-3xl font-semibold text-neutral-900">
+                        ${(product.price / 100).toFixed(0)}
+                      </span>
+                      {hasPaymentPlan && (
+                        <p className="text-sm text-neutral-600 mt-1">
+                          Or 3 payments of $59/month
+                        </p>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+              <EnrollButton
+                productId={product.id}
+                productSlug={product.slug}
+                hasPaymentPlan={hasPaymentPlan}
+                isFree={isFree}
+                isLoggedIn={!!session?.user}
+              />
+            </>
           )}
         </div>
 
