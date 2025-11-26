@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { WorkbookViewer } from "@/components/WorkbookViewer";
-import { PdfWorkbookViewer } from "@/components/PdfWorkbookViewer";
+import { DynamicPdfViewer } from "@/components/DynamicPdfViewer";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -126,7 +126,7 @@ export default async function WorkbookPage({ params }: PageProps) {
 
         {/* Workbook Viewer - PDF or Image based */}
         {hasPdf ? (
-          <PdfWorkbookViewer
+          <DynamicPdfViewer
             workbookId={workbook.id}
             initialPage={initialPage}
           />
