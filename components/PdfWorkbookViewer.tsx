@@ -1,9 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { ChevronLeft, ChevronRight, Loader2, ZoomIn, ZoomOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+// Import react-pdf styles for proper annotation rendering
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 
 // Configure PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -24,6 +28,7 @@ export function PdfWorkbookViewer({
   const [error, setError] = useState<string | null>(null);
   const [scale, setScale] = useState(1.0);
   const [pageWidth, setPageWidth] = useState<number | undefined>(undefined);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Fetch signed PDF URL
   useEffect(() => {
@@ -86,6 +91,30 @@ export function PdfWorkbookViewer({
     }
   }, [currentPage, totalPages, loading, pdfUrl]);
 
+  // Handle external link clicks in PDF annotations
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleLinkClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a');
+
+      if (link && link.href) {
+        // Check if it's an external link (not a page reference)
+        const href = link.getAttribute('href');
+        if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.open(href, '_blank', 'noopener,noreferrer');
+        }
+      }
+    };
+
+    container.addEventListener('click', handleLinkClick);
+    return () => container.removeEventListener('click', handleLinkClick);
+  }, [currentPage, totalPages]);
+
   const saveProgress = async () => {
     try {
       await fetch(`/api/workbooks/${workbookId}/progress`, {
@@ -129,7 +158,10 @@ export function PdfWorkbookViewer({
 
   const onDocumentLoadError = (error: Error) => {
     console.error("Error loading PDF:", error);
-    setError("Failed to load PDF document");
+    console.error("Error name:", error.name);
+    console.error("Error message:", error.message);
+    console.error("PDF URL was:", pdfUrl);
+    setError(`Failed to load PDF: ${error.message || 'Unknown error'}`);
   };
 
   if (loading) {
@@ -218,6 +250,7 @@ export function PdfWorkbookViewer({
 
       {/* PDF Viewer */}
       <div
+        ref={containerRef}
         id="pdf-container"
         className="bg-neutral-100 border border-neutral-200 rounded-lg overflow-auto p-4"
         style={{ minHeight: "600px" }}
