@@ -28,8 +28,12 @@ async function main() {
   const optimalFertilityBlueprint = await prisma.product.upsert({
     where: { slug: 'optimal-fertility-blueprint' },
     update: {
-      priceId: process.env.STRIPE_PRICE_ID_OFB_ONE_TIME || 'price_xxx',
-      paymentPlanPriceId: process.env.STRIPE_PRICE_ID_OFB_PLAN || 'price_yyy',
+      // Live mode price IDs
+      priceId: process.env.STRIPE_LIVE_PRICE_ID_OFB_ONE_TIME || null,
+      paymentPlanPriceId: process.env.STRIPE_LIVE_PRICE_ID_OFB_PLAN || null,
+      // Test mode price IDs
+      testPriceId: process.env.STRIPE_TEST_PRICE_ID_OFB_ONE_TIME || null,
+      testPaymentPlanPriceId: process.env.STRIPE_TEST_PRICE_ID_OFB_PLAN || null,
     },
     create: {
       name: 'Optimal Fertility Blueprint',
@@ -39,17 +43,20 @@ async function main() {
       type: ProductType.PAID_PROGRAM,
       featured: true,
       order: 2,
-      // TODO: Replace with actual Stripe Price IDs from your Stripe Dashboard
-      // Create these in Stripe: https://dashboard.stripe.com/test/products
-      priceId: process.env.STRIPE_PRICE_ID_OFB_ONE_TIME || 'price_xxx', // One-time payment: $149
-      paymentPlanPriceId: process.env.STRIPE_PRICE_ID_OFB_PLAN || 'price_yyy', // Payment plan: 3 x $59/month
+      // Live mode price IDs
+      priceId: process.env.STRIPE_LIVE_PRICE_ID_OFB_ONE_TIME || null,
+      paymentPlanPriceId: process.env.STRIPE_LIVE_PRICE_ID_OFB_PLAN || null,
+      // Test mode price IDs
+      testPriceId: process.env.STRIPE_TEST_PRICE_ID_OFB_ONE_TIME || null,
+      testPaymentPlanPriceId: process.env.STRIPE_TEST_PRICE_ID_OFB_PLAN || null,
     },
   });
 
   const stressFreeGoddess = await prisma.product.upsert({
     where: { slug: 'stress-free-goddess' },
     update: {
-      priceId: process.env.STRIPE_PRICE_ID_SFG || 'price_1SToTU3rioCqkoangJhHwXE8',
+      priceId: process.env.STRIPE_LIVE_PRICE_ID_SFG || null,
+      testPriceId: process.env.STRIPE_TEST_PRICE_ID_SFG || null,
     },
     create: {
       name: 'Stress-free Goddess Program',
@@ -59,14 +66,16 @@ async function main() {
       type: ProductType.PAID_PROGRAM,
       featured: false,
       order: 3,
-      priceId: process.env.STRIPE_PRICE_ID_SFG || 'price_1SToTU3rioCqkoangJhHwXE8',
+      priceId: process.env.STRIPE_LIVE_PRICE_ID_SFG || null,
+      testPriceId: process.env.STRIPE_TEST_PRICE_ID_SFG || null,
     },
   });
 
   const fearlesslyFertileYoga = await prisma.product.upsert({
     where: { slug: 'fearlessly-fertile-yoga' },
     update: {
-      priceId: process.env.STRIPE_PRICE_ID_FFY || 'price_1SU8HB3rioCqkoanwkdtbkTR',
+      priceId: process.env.STRIPE_LIVE_PRICE_ID_FFY || null,
+      testPriceId: process.env.STRIPE_TEST_PRICE_ID_FFY || null,
     },
     create: {
       name: 'Fearlessly Fertile Yoga',
@@ -76,7 +85,8 @@ async function main() {
       type: ProductType.PAID_PROGRAM,
       featured: false,
       order: 4,
-      priceId: process.env.STRIPE_PRICE_ID_FFY || 'price_1SU8HB3rioCqkoanwkdtbkTR',
+      priceId: process.env.STRIPE_LIVE_PRICE_ID_FFY || null,
+      testPriceId: process.env.STRIPE_TEST_PRICE_ID_FFY || null,
     },
   });
 

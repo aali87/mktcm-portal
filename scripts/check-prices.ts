@@ -8,14 +8,18 @@ async function checkPrices() {
         name: true,
         priceId: true,
         paymentPlanPriceId: true,
+        testPriceId: true,
+        testPaymentPlanPriceId: true,
       },
     });
 
     console.log('Current Stripe Price IDs:\n');
     products.forEach((product) => {
       console.log(`${product.name} (${product.slug}):`);
-      console.log(`  One-time: ${product.priceId || 'NOT SET'}`);
-      console.log(`  Payment plan: ${product.paymentPlanPriceId || 'NOT SET'}`);
+      console.log(`  LIVE One-time: ${product.priceId || 'NOT SET'}`);
+      console.log(`  LIVE Payment plan: ${product.paymentPlanPriceId || 'NOT SET'}`);
+      console.log(`  TEST One-time: ${product.testPriceId || 'NOT SET'}`);
+      console.log(`  TEST Payment plan: ${product.testPaymentPlanPriceId || 'NOT SET'}`);
       console.log('');
     });
   } catch (error) {

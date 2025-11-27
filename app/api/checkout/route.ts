@@ -77,20 +77,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Determine which Stripe price ID to use
+    // Determine if we're in test mode or live mode
+    // STRIPE_MODE can be 'test' or 'live' (defaults to 'live' in production)
+    const isTestMode = process.env.STRIPE_MODE === 'test';
+
+    // Determine which Stripe price ID to use based on mode and price type
     let stripePriceId: string | null = null;
-    if (priceType === 'payment-plan' && product.paymentPlanPriceId) {
-      stripePriceId = product.paymentPlanPriceId;
-    } else if (product.priceId) {
-      stripePriceId = product.priceId;
+
+    if (priceType === 'payment-plan') {
+      // Payment plan price ID
+      stripePriceId = isTestMode
+        ? product.testPaymentPlanPriceId
+        : product.paymentPlanPriceId;
+    } else {
+      // One-time price ID
+      stripePriceId = isTestMode
+        ? product.testPriceId
+        : product.priceId;
     }
 
     if (!stripePriceId) {
+      const modeText = isTestMode ? 'test' : 'live';
+      console.error(`No ${modeText} mode price ID configured for product:`, product.slug);
       return NextResponse.json(
-        { error: 'This product does not have a Stripe price configured' },
+        { error: `This product does not have a Stripe price configured for ${modeText} mode` },
         { status: 400 }
       );
     }
+
+    console.log('Stripe checkout config:', {
+      mode: isTestMode ? 'test' : 'live',
+      priceType,
+      stripePriceId,
+      productSlug: product.slug,
+    });
 
     // Get the base URL from the request
     // Priority: 1) origin header, 2) referer header's origin, 3) NEXT_PUBLIC_APP_URL, 4) localhost
@@ -143,10 +163,15 @@ export async function POST(request: NextRequest) {
       sessionId: checkoutSession.id,
       url: checkoutSession.url,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Checkout error:', error);
+    console.error('Checkout error message:', error?.message);
+    console.error('Checkout error type:', error?.type);
+
+    // Return more specific error for debugging
+    const errorMessage = error?.message || 'Failed to create checkout session';
     return NextResponse.json(
-      { error: 'Failed to create checkout session' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

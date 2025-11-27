@@ -98,8 +98,14 @@ model Product {
   videos      Video[]
   workbooks   Workbook[]
   printables  Printable[]
-  priceId     String?    // Stripe Price ID
-  paymentPlanPriceId String? // Stripe Price ID for payment plan
+
+  // Stripe Price IDs - Live mode
+  priceId            String?  // Stripe Live Price ID (one-time)
+  paymentPlanPriceId String?  // Stripe Live Price ID (subscription/payment plan)
+
+  // Stripe Price IDs - Test mode
+  testPriceId            String?  // Stripe Test Price ID (one-time)
+  testPaymentPlanPriceId String?  // Stripe Test Price ID (subscription/payment plan)
 
   @@map("products")
 }

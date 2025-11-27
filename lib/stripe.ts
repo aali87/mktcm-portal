@@ -1,11 +1,18 @@
 import Stripe from 'stripe';
 
-// Use a dummy key during build if STRIPE_SECRET_KEY is not set
-// This allows Next.js to build without failing, but will error at runtime if actually used
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY || 'sk_test_dummy_key_for_build';
+// Determine if we're in test mode or live mode
+// STRIPE_MODE can be 'test' or 'live' (defaults to 'live' in production)
+const isTestMode = process.env.STRIPE_MODE === 'test';
 
-if (!process.env.STRIPE_SECRET_KEY && process.env.NODE_ENV !== 'production') {
-  console.warn('Warning: STRIPE_SECRET_KEY is not set. Using dummy key for build.');
+// Select the appropriate secret key based on mode
+// Use STRIPE_TEST_SECRET_KEY for test mode, STRIPE_LIVE_SECRET_KEY for live mode
+// Falls back to STRIPE_SECRET_KEY for backwards compatibility
+const stripeSecretKey = isTestMode
+  ? (process.env.STRIPE_TEST_SECRET_KEY || process.env.STRIPE_SECRET_KEY || 'sk_test_dummy_key_for_build')
+  : (process.env.STRIPE_LIVE_SECRET_KEY || process.env.STRIPE_SECRET_KEY || 'sk_test_dummy_key_for_build');
+
+if (!stripeSecretKey.startsWith('sk_') && process.env.NODE_ENV !== 'production') {
+  console.warn('Warning: No valid Stripe secret key set. Using dummy key for build.');
 }
 
 export const stripe = new Stripe(stripeSecretKey, {
