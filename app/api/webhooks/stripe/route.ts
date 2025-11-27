@@ -19,13 +19,29 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Determine if we're in test mode or live mode
+  const isTestMode = process.env.STRIPE_MODE === 'test';
+
+  // Select the appropriate webhook secret based on mode
+  const webhookSecret = isTestMode
+    ? (process.env.STRIPE_TEST_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET)
+    : (process.env.STRIPE_LIVE_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET);
+
+  if (!webhookSecret) {
+    console.error('No webhook secret configured for mode:', isTestMode ? 'test' : 'live');
+    return NextResponse.json(
+      { error: 'Webhook secret not configured' },
+      { status: 500 }
+    );
+  }
+
   let event: Stripe.Event;
 
   try {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      webhookSecret
     );
   } catch (error) {
     console.error('Webhook signature verification failed:', error);

@@ -14,10 +14,16 @@ async function testStripeIntegration() {
 
   // Test 1: Stripe API Connection
   console.log('1️⃣  Testing Stripe API connection...');
+  const isTestMode = process.env.STRIPE_MODE === 'test';
+  const secretKey = isTestMode
+    ? (process.env.STRIPE_TEST_SECRET_KEY || process.env.STRIPE_SECRET_KEY)
+    : (process.env.STRIPE_LIVE_SECRET_KEY || process.env.STRIPE_SECRET_KEY);
+
   try {
     const balance = await stripe.balance.retrieve();
     console.log('✅ Connected to Stripe API successfully');
-    console.log(`   Mode: ${process.env.STRIPE_SECRET_KEY?.startsWith('sk_test') ? 'TEST' : 'LIVE'}`);
+    console.log(`   STRIPE_MODE: ${process.env.STRIPE_MODE || 'not set (defaulting to live)'}`);
+    console.log(`   Mode: ${secretKey?.startsWith('sk_test') ? 'TEST' : 'LIVE'}`);
     console.log(`   Available balance: $${(balance.available[0]?.amount || 0) / 100}\n`);
   } catch (error) {
     console.error('❌ Failed to connect to Stripe API');
@@ -39,8 +45,10 @@ async function testStripeIntegration() {
     for (const product of products) {
       console.log(`\n   📦 ${product.name}`);
       console.log(`      Price: $${product.price / 100}`);
-      console.log(`      One-time price ID: ${product.priceId || '❌ NOT SET'}`);
-      console.log(`      Payment plan ID: ${product.paymentPlanPriceId || '❌ NOT SET'}`);
+      console.log(`      LIVE One-time: ${product.priceId || '❌ NOT SET'}`);
+      console.log(`      LIVE Payment plan: ${product.paymentPlanPriceId || '❌ NOT SET'}`);
+      console.log(`      TEST One-time: ${(product as any).testPriceId || '❌ NOT SET'}`);
+      console.log(`      TEST Payment plan: ${(product as any).testPaymentPlanPriceId || '❌ NOT SET'}`);
     }
     console.log();
   } catch (error) {
@@ -100,10 +108,18 @@ async function testStripeIntegration() {
   // Test 4: Environment Variables
   console.log('4️⃣  Checking environment variables...');
   const requiredVars = [
-    'STRIPE_SECRET_KEY',
-    'STRIPE_PUBLISHABLE_KEY',
-    'STRIPE_WEBHOOK_SECRET',
+    'STRIPE_MODE',
+    'STRIPE_LIVE_SECRET_KEY',
+    'STRIPE_TEST_SECRET_KEY',
+    'STRIPE_LIVE_WEBHOOK_SECRET',
+    'STRIPE_TEST_WEBHOOK_SECRET',
     'NEXT_PUBLIC_APP_URL',
+  ];
+
+  // Also accept legacy vars for backwards compatibility
+  const legacyVars = [
+    'STRIPE_SECRET_KEY',
+    'STRIPE_WEBHOOK_SECRET',
   ];
 
   let missingVars = 0;
@@ -111,8 +127,17 @@ async function testStripeIntegration() {
     if (process.env[varName]) {
       console.log(`✅ ${varName} is set`);
     } else {
-      console.error(`❌ ${varName} is missing`);
+      console.warn(`⚠️  ${varName} is not set`);
       missingVars++;
+    }
+  }
+
+  console.log('\n   Legacy variables (for backwards compatibility):');
+  for (const varName of legacyVars) {
+    if (process.env[varName]) {
+      console.log(`✅ ${varName} is set`);
+    } else {
+      console.log(`   ${varName} is not set (optional)`);
     }
   }
   console.log();
