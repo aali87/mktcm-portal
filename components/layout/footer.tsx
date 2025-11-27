@@ -92,20 +92,12 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Support */}
+          {/* Legal */}
           <div>
             <h4 className="font-sans text-sm font-semibold text-neutral-800 mb-4">
-              Support
+              Legal
             </h4>
             <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-sm text-neutral-600 hover:text-primary transition-colors"
-                >
-                  Contact Us
-                </Link>
-              </li>
               <li>
                 <Link
                   href="/privacy"
