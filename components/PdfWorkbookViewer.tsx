@@ -140,6 +140,9 @@ export function PdfWorkbookViewer({
                 s3Key = s3Key.substring(1);
               }
 
+              // Convert + to spaces (URL encoding uses + for spaces in some contexts)
+              s3Key = s3Key.replace(/\+/g, ' ');
+
               // Look up the workbook video by S3 key
               const response = await fetch(`/api/workbook-videos/lookup?s3Key=${encodeURIComponent(s3Key)}`);
 
