@@ -15,11 +15,15 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 interface PdfWorkbookViewerProps {
   workbookId: string;
+  workbookSlug: string;
+  productSlug: string;
   initialPage?: number;
 }
 
 export function PdfWorkbookViewer({
   workbookId,
+  workbookSlug,
+  productSlug,
   initialPage = 1,
 }: PdfWorkbookViewerProps) {
   const [currentPage, setCurrentPage] = useState(initialPage);
@@ -97,7 +101,7 @@ export function PdfWorkbookViewer({
     const container = containerRef.current;
     if (!container) return;
 
-    const handleLinkClick = (e: MouseEvent) => {
+    const handleLinkClick = async (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const link = target.closest('a');
 
@@ -107,14 +111,65 @@ export function PdfWorkbookViewer({
         if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
           e.preventDefault();
           e.stopPropagation();
-          window.open(href, '_blank', 'noopener,noreferrer');
+
+          // Check if this is an S3 video link for a workbook video
+          // S3 links contain the bucket URL and video file extensions
+          const isS3VideoLink = (
+            href.includes('.s3.') ||
+            href.includes('s3.amazonaws.com') ||
+            href.includes('s3.us-') ||
+            href.includes('s3.eu-') ||
+            href.includes('s3.ap-')
+          ) && (
+            href.toLowerCase().includes('.mov') ||
+            href.toLowerCase().includes('.mp4') ||
+            href.toLowerCase().includes('.m4v') ||
+            href.toLowerCase().includes('.webm')
+          );
+
+          if (isS3VideoLink) {
+            try {
+              // Extract the S3 key from the URL
+              // URL format: https://bucket.s3.region.amazonaws.com/path/to/video.mov
+              // or: https://s3.region.amazonaws.com/bucket/path/to/video.mov
+              const url = new URL(href);
+              let s3Key = decodeURIComponent(url.pathname);
+
+              // Remove leading slash
+              if (s3Key.startsWith('/')) {
+                s3Key = s3Key.substring(1);
+              }
+
+              // Look up the workbook video by S3 key
+              const response = await fetch(`/api/workbook-videos/lookup?s3Key=${encodeURIComponent(s3Key)}`);
+
+              if (response.ok) {
+                const data = await response.json();
+                // Navigate to the workbook video player with return info
+                const videoUrl = `/dashboard/workbook-video/${data.id}?returnPage=${currentPage}&workbookSlug=${workbookSlug}&productSlug=${productSlug}`;
+                window.location.href = videoUrl;
+                return;
+              } else {
+                // Video not found in database, open link normally
+                console.warn('Workbook video not found in database for S3 key:', s3Key);
+                window.open(href, '_blank', 'noopener,noreferrer');
+              }
+            } catch (err) {
+              console.error('Error looking up workbook video:', err);
+              // Fall back to opening the link normally
+              window.open(href, '_blank', 'noopener,noreferrer');
+            }
+          } else {
+            // Regular external link - open in new tab
+            window.open(href, '_blank', 'noopener,noreferrer');
+          }
         }
       }
     };
 
     container.addEventListener('click', handleLinkClick);
     return () => container.removeEventListener('click', handleLinkClick);
-  }, [currentPage, totalPages]);
+  }, [currentPage, totalPages, workbookSlug, productSlug]);
 
   const saveProgress = async () => {
     try {

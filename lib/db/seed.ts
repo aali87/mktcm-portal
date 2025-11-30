@@ -291,6 +291,128 @@ async function main() {
 
   console.log(`Created ${workbooksData.length} workbooks for Optimal Fertility Blueprint`);
 
+  // Create Workbook Videos (acupressure videos embedded in PDF workbooks)
+  console.log('\nCreating Optimal Fertility Blueprint workbook videos...');
+
+  // First, get all workbooks for linking
+  const workbooks = await prisma.workbook.findMany({
+    where: { productId: optimalFertilityBlueprint.id },
+  });
+
+  const workbookBySlug = (slug: string) => workbooks.find(w => w.slug === slug);
+
+  const workbookVideosData = [
+    {
+      workbookSlug: 'week-1-lungs',
+      title: 'Acupressure - Week 1: Lungs',
+      description: 'Learn acupressure techniques to strengthen your Lung Qi and boost immunity.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure+-+WK+1+Lung+.mov',
+      order: 1,
+    },
+    {
+      workbookSlug: 'week-2-qi',
+      title: 'Acupressure - Week 2: Qi',
+      description: 'Discover acupressure points to cultivate and circulate your vital Qi energy.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure+-+Week+2+Qi.mov',
+      order: 1,
+    },
+    {
+      workbookSlug: 'week-3-spleen',
+      title: 'Acupressure - Week 3: Spleen',
+      description: 'Master acupressure techniques to support digestion and blood production.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure+WK+3+Spleen.mov',
+      order: 1,
+    },
+    {
+      workbookSlug: 'week-4-kidneys',
+      title: 'Acupressure - Week 4: Blood',
+      description: 'Learn acupressure points to build and nourish your blood for fertility.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure+-+WK+4+Blood.MOV',
+      order: 1,
+    },
+    {
+      workbookSlug: 'week-5-liver',
+      title: 'Acupressure - Week 5: Liver',
+      description: 'Discover liver acupressure points to harmonize emotions and improve Qi flow.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure-+WK5+Liver.mov',
+      order: 1,
+    },
+    {
+      workbookSlug: 'week-6-heart',
+      title: 'Acupressure - Week 6: Shen',
+      description: 'Learn heart-related acupressure to cultivate joy and calm your spirit.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure+-+WK6+Shen.mov',
+      order: 1,
+    },
+    {
+      workbookSlug: 'week-7-blood',
+      title: 'Acupressure - Week 7: Kidney',
+      description: 'Master kidney acupressure techniques to build essence and vitality.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure-+WK+7+Kidney.mov',
+      order: 1,
+    },
+    {
+      workbookSlug: 'week-8-yin',
+      title: 'Acupressure - Week 8: Heart',
+      description: 'Explore heart acupressure for deep rest and yin nourishment.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure+-+wk+8+heart.mov',
+      order: 1,
+    },
+    {
+      workbookSlug: 'week-9-yang',
+      title: 'Acupressure - Week 9: Integration',
+      description: 'Integrate all acupressure techniques to balance yin and yang energies.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure+Wk+9+-+integration.mov',
+      order: 1,
+    },
+    // Bonus videos
+    {
+      workbookSlug: 'bonus-workbook',
+      title: 'Bonus: Mindfulness Practice',
+      description: 'A guided mindfulness meditation for fertility and emotional well-being.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Mindfulness-+WK+8+Heart.mov',
+      order: 1,
+    },
+    {
+      workbookSlug: 'bonus-workbook',
+      title: 'Bonus: Qigong Practice',
+      description: 'A Qigong session to cultivate heart energy and overall vitality.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Qigong+-+wk8+heart.mov',
+      order: 2,
+    },
+  ];
+
+  for (const videoData of workbookVideosData) {
+    const workbook = workbookBySlug(videoData.workbookSlug);
+    if (!workbook) {
+      console.warn(`Workbook not found for slug: ${videoData.workbookSlug}`);
+      continue;
+    }
+
+    await prisma.workbookVideo.upsert({
+      where: {
+        workbookId_s3Key: {
+          workbookId: workbook.id,
+          s3Key: videoData.s3Key,
+        },
+      },
+      update: {
+        title: videoData.title,
+        description: videoData.description,
+        order: videoData.order,
+      },
+      create: {
+        workbookId: workbook.id,
+        title: videoData.title,
+        description: videoData.description,
+        s3Key: videoData.s3Key,
+        order: videoData.order,
+      },
+    });
+  }
+
+  console.log(`Created ${workbookVideosData.length} workbook videos for Optimal Fertility Blueprint`);
+
   // Create Stress-free Goddess videos
   console.log('\nCreating Stress-free Goddess videos...');
 

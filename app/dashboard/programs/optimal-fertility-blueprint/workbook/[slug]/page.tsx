@@ -128,6 +128,8 @@ export default async function WorkbookPage({ params }: PageProps) {
         {hasPdf ? (
           <DynamicPdfViewer
             workbookId={workbook.id}
+            workbookSlug={workbook.slug}
+            productSlug={workbook.product.slug}
             initialPage={initialPage}
           />
         ) : (

@@ -21,9 +21,18 @@ const PdfWorkbookViewer = dynamic(
 
 interface DynamicPdfViewerProps {
   workbookId: string;
+  workbookSlug: string;
+  productSlug: string;
   initialPage?: number;
 }
 
-export function DynamicPdfViewer({ workbookId, initialPage = 1 }: DynamicPdfViewerProps) {
-  return <PdfWorkbookViewer workbookId={workbookId} initialPage={initialPage} />;
+export function DynamicPdfViewer({ workbookId, workbookSlug, productSlug, initialPage = 1 }: DynamicPdfViewerProps) {
+  return (
+    <PdfWorkbookViewer
+      workbookId={workbookId}
+      workbookSlug={workbookSlug}
+      productSlug={productSlug}
+      initialPage={initialPage}
+    />
+  );
 }
