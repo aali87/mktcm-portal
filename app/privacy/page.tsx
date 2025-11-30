@@ -2,8 +2,8 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
 export const metadata = {
-  title: "Privacy Policy | ClearPath Fertility",
-  description: "Privacy Policy for ClearPath Fertility member portal and programs.",
+  title: "Privacy Policy | Meaghan Kleovoulos TCM",
+  description: "Privacy Policy for Meaghan Kleovoulos TCM member portal and programs.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
           <section className="mb-8">
             <h2 className="font-serif text-2xl text-neutral-800 mb-4">1. Introduction</h2>
             <p className="text-neutral-600 mb-4">
-              ClearPath Fertility ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services, including our member portal and educational programs.
+              Meaghan Kleovoulos TCM ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services, including our member portal and educational programs.
             </p>
           </section>
 
@@ -133,7 +133,7 @@ export default function PrivacyPolicyPage() {
               If you have any questions about this Privacy Policy or our privacy practices, please contact us at:
             </p>
             <p className="text-neutral-600">
-              <strong>Email:</strong> support@clearpathfertility.com
+              <strong>Email:</strong> support@mktcm.com
             </p>
           </section>
         </div>

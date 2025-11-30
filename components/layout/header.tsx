@@ -31,7 +31,7 @@ export function Header({ user }: HeaderProps) {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <span className="font-serif text-2xl text-neutral-800 font-semibold">
-              ClearPath Fertility
+              Meaghan Kleovoulos TCM
             </span>
           </Link>
 

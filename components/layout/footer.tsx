@@ -11,7 +11,7 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <h3 className="font-serif text-xl text-neutral-800 font-semibold">
-              ClearPath Fertility
+              Meaghan Kleovoulos TCM
             </h3>
             <p className="text-sm text-neutral-600">
               Supporting your journey to optimal fertility through Traditional Chinese Medicine and holistic wellness.
@@ -122,7 +122,7 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-neutral-200">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-neutral-600">
-              © {currentYear} ClearPath Fertility. All rights reserved.
+              © {currentYear} Meaghan Kleovoulos TCM. All rights reserved.
             </p>
             <p className="text-sm text-neutral-600 flex items-center gap-1">
               Made with <Heart className="h-4 w-4 text-primary fill-primary" /> for your fertility journey

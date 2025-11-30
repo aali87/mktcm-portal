@@ -2,8 +2,8 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
 export const metadata = {
-  title: "Terms of Service | ClearPath Fertility",
-  description: "Terms of Service for ClearPath Fertility member portal and programs.",
+  title: "Terms of Service | Meaghan Kleovoulos TCM",
+  description: "Terms of Service for Meaghan Kleovoulos TCM member portal and programs.",
 };
 
 export default function TermsOfServicePage() {
@@ -22,14 +22,14 @@ export default function TermsOfServicePage() {
           <section className="mb-8">
             <h2 className="font-serif text-2xl text-neutral-800 mb-4">1. Agreement to Terms</h2>
             <p className="text-neutral-600 mb-4">
-              By accessing or using the ClearPath Fertility website and services ("Services"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our Services.
+              By accessing or using the Meaghan Kleovoulos TCM website and services ("Services"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our Services.
             </p>
           </section>
 
           <section className="mb-8">
             <h2 className="font-serif text-2xl text-neutral-800 mb-4">2. Description of Services</h2>
             <p className="text-neutral-600 mb-4">
-              ClearPath Fertility provides educational content, programs, and resources related to fertility wellness and Traditional Chinese Medicine. Our Services include:
+              Meaghan Kleovoulos TCM provides educational content, programs, and resources related to fertility wellness and Traditional Chinese Medicine. Our Services include:
             </p>
             <ul className="list-disc list-inside text-neutral-600 mb-4 space-y-2">
               <li>Online educational programs and courses</li>
@@ -74,7 +74,7 @@ export default function TermsOfServicePage() {
           <section className="mb-8">
             <h2 className="font-serif text-2xl text-neutral-800 mb-4">5. Intellectual Property</h2>
             <p className="text-neutral-600 mb-4">
-              All content provided through our Services, including but not limited to text, graphics, logos, videos, audio, and software, is the property of ClearPath Fertility or its content suppliers and is protected by intellectual property laws.
+              All content provided through our Services, including but not limited to text, graphics, logos, videos, audio, and software, is the property of Meaghan Kleovoulos TCM or its content suppliers and is protected by intellectual property laws.
             </p>
             <p className="text-neutral-600 mb-4">
               You are granted a limited, non-exclusive, non-transferable license to access and use the content for personal, non-commercial purposes only. You may not:
@@ -97,7 +97,7 @@ export default function TermsOfServicePage() {
               Always consult with a qualified healthcare provider before making any changes to your health regimen, especially regarding fertility treatments. Our content is not intended to diagnose, treat, cure, or prevent any disease or health condition.
             </p>
             <p className="text-neutral-600 mb-4">
-              By using our Services, you acknowledge that you understand these limitations and agree that ClearPath Fertility is not responsible for any health decisions you make based on our educational content.
+              By using our Services, you acknowledge that you understand these limitations and agree that Meaghan Kleovoulos TCM is not responsible for any health decisions you make based on our educational content.
             </p>
           </section>
 
@@ -119,7 +119,7 @@ export default function TermsOfServicePage() {
           <section className="mb-8">
             <h2 className="font-serif text-2xl text-neutral-800 mb-4">8. Limitation of Liability</h2>
             <p className="text-neutral-600 mb-4">
-              To the fullest extent permitted by law, ClearPath Fertility shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or relating to your use of our Services.
+              To the fullest extent permitted by law, Meaghan Kleovoulos TCM shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or relating to your use of our Services.
             </p>
             <p className="text-neutral-600 mb-4">
               Our total liability for any claims arising from your use of our Services shall not exceed the amount you paid to us in the twelve (12) months preceding the claim.
@@ -129,7 +129,7 @@ export default function TermsOfServicePage() {
           <section className="mb-8">
             <h2 className="font-serif text-2xl text-neutral-800 mb-4">9. Indemnification</h2>
             <p className="text-neutral-600 mb-4">
-              You agree to indemnify, defend, and hold harmless ClearPath Fertility and its officers, directors, employees, and agents from any claims, damages, losses, or expenses arising from your use of our Services or violation of these Terms.
+              You agree to indemnify, defend, and hold harmless Meaghan Kleovoulos TCM and its officers, directors, employees, and agents from any claims, damages, losses, or expenses arising from your use of our Services or violation of these Terms.
             </p>
           </section>
 
@@ -150,7 +150,7 @@ export default function TermsOfServicePage() {
           <section className="mb-8">
             <h2 className="font-serif text-2xl text-neutral-800 mb-4">12. Governing Law</h2>
             <p className="text-neutral-600 mb-4">
-              These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which ClearPath Fertility operates, without regard to its conflict of law provisions.
+              These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which Meaghan Kleovoulos TCM operates, without regard to its conflict of law provisions.
             </p>
           </section>
 
@@ -160,7 +160,7 @@ export default function TermsOfServicePage() {
               If you have any questions about these Terms of Service, please contact us at:
             </p>
             <p className="text-neutral-600">
-              <strong>Email:</strong> support@clearpathfertility.com
+              <strong>Email:</strong> support@mktcm.com
             </p>
           </section>
         </div>
