@@ -175,7 +175,7 @@ async function main() {
   const workbooksData = [
     {
       slug: 'week-1-lungs',
-      title: 'Week 1: Lungs - Strengthen Qi & Immunity',
+      title: 'Week 1: Lungs - Strengthen Qi & Immune Function',
       description: 'Learn how the lungs govern your Qi and defensive energy. Includes acupressure points, breathing exercises, and immune-boosting practices.',
       weekNumber: 1,
       s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-1-lungs',
@@ -185,7 +185,7 @@ async function main() {
     },
     {
       slug: 'week-2-qi',
-      title: 'Week 2: Qi - Cultivate Your Vital Energy',
+      title: 'Week 2: Qi - Replenishing Vital Energy & Enhancing Resilience',
       description: 'Discover how to build and circulate Qi for optimal reproductive health. Qigong movements and energy cultivation practices.',
       weekNumber: 2,
       s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-2-qi',
@@ -195,7 +195,7 @@ async function main() {
     },
     {
       slug: 'week-3-spleen',
-      title: 'Week 3: Spleen - Nourish Digestion & Blood',
+      title: 'Week 3: Spleen Qi - Nourishing Your Foundation',
       description: 'Support your spleen to transform food into rich, nourishing blood. Dietary therapy and self-care practices.',
       weekNumber: 3,
       s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-3-spleen',
@@ -204,9 +204,9 @@ async function main() {
       orderIndex: 3,
     },
     {
-      slug: 'week-4-kidneys',
-      title: 'Week 4: Kidneys - Build Essence & Vitality',
-      description: 'The kidneys store your reproductive essence (Jing). Learn how to preserve and build this vital resource.',
+      slug: 'week-4-blood',
+      title: 'Week 4: Blood - Nourishing & Moving',
+      description: 'Blood nourishes your reproductive organs and supports conception. Blood-building nutrition and practices.',
       weekNumber: 4,
       s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-4-kidneys',
       totalPages: 8,
@@ -215,7 +215,7 @@ async function main() {
     },
     {
       slug: 'week-5-liver',
-      title: 'Week 5: Liver - Harmonize Emotions & Flow',
+      title: 'Week 5: Liver - Restore Flow & Balance',
       description: 'The liver ensures smooth flow of Qi and blood. Emotional release techniques and stress management.',
       weekNumber: 5,
       s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-5-liver',
@@ -224,8 +224,8 @@ async function main() {
       orderIndex: 5,
     },
     {
-      slug: 'week-6-heart',
-      title: 'Week 6: Heart - Cultivate Joy & Connection',
+      slug: 'week-6-shen',
+      title: 'Week 6: Shen - Harmonizing the Mind, Spirit, and Emotions',
       description: 'The heart houses your spirit (Shen). Heart-opening practices and meditation for emotional well-being.',
       weekNumber: 6,
       s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-6-heart',
@@ -234,9 +234,9 @@ async function main() {
       orderIndex: 6,
     },
     {
-      slug: 'week-7-blood',
-      title: 'Week 7: Blood - Build & Circulate Life Force',
-      description: 'Blood nourishes your reproductive organs and supports conception. Blood-building nutrition and practices.',
+      slug: 'week-7-kidneys',
+      title: 'Week 7: Kidneys - Restore & Replenish',
+      description: 'The kidneys store your reproductive essence (Jing). Learn how to preserve and build this vital resource.',
       weekNumber: 7,
       s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-7-blood',
       totalPages: 8,
@@ -244,9 +244,9 @@ async function main() {
       orderIndex: 7,
     },
     {
-      slug: 'week-8-yin',
-      title: 'Week 8: Yin - Deepen Rest & Nourishment',
-      description: 'Yin is the cooling, nourishing, restorative aspect of your being. Yin yoga and self-nourishment practices.',
+      slug: 'week-8-heart',
+      title: 'Week 8: Heart - Joy & Circulation',
+      description: 'The heart governs blood circulation and houses joy. Heart-opening practices for emotional and physical well-being.',
       weekNumber: 8,
       s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-8-yin',
       totalPages: 8,
@@ -254,9 +254,9 @@ async function main() {
       orderIndex: 8,
     },
     {
-      slug: 'week-9-yang',
-      title: 'Week 9: Yang - Activate Warmth & Movement',
-      description: 'Yang is the warming, activating energy. Learn to balance yin and yang for optimal fertility.',
+      slug: 'week-9-integration',
+      title: 'Week 9: Integration - Anchoring the Healing & Preparing for Conception',
+      description: 'Integrate all practices and prepare your body, mind, and spirit for conception.',
       weekNumber: 9,
       s3FolderPath: 'workbooks/optimal-fertility-blueprint/week-9-yang',
       totalPages: 8,
@@ -302,6 +302,7 @@ async function main() {
   const workbookBySlug = (slug: string) => workbooks.find(w => w.slug === slug);
 
   const workbookVideosData = [
+    // Week 1 - Lungs
     {
       workbookSlug: 'week-1-lungs',
       title: 'Acupressure - Week 1: Lungs',
@@ -310,12 +311,42 @@ async function main() {
       order: 1,
     },
     {
+      workbookSlug: 'week-1-lungs',
+      title: 'Mindfulness - Week 1: Lungs',
+      description: 'A guided mindfulness meditation to support Lung Qi and immunity.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Mindfulness - WK 1 Lung.mov',
+      order: 2,
+    },
+    {
+      workbookSlug: 'week-1-lungs',
+      title: 'Qigong - Week 1: Lungs',
+      description: 'Qigong practice to strengthen your Lung Qi and boost immunity.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Qigong - wk 1 lung.mov',
+      order: 3,
+    },
+    // Week 2 - Qi
+    {
       workbookSlug: 'week-2-qi',
       title: 'Acupressure - Week 2: Qi',
       description: 'Discover acupressure points to cultivate and circulate your vital Qi energy.',
       s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure - Week 2 Qi.mov',
       order: 1,
     },
+    {
+      workbookSlug: 'week-2-qi',
+      title: 'Mindfulness - Week 2: Qi',
+      description: 'A guided mindfulness meditation to cultivate and circulate your vital Qi energy.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Mindfulness - WK2 Qi.MP4',
+      order: 2,
+    },
+    {
+      workbookSlug: 'week-2-qi',
+      title: 'Qigong - Week 2: Qi',
+      description: 'Qigong practice to cultivate and circulate your vital Qi energy.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Qigong - Wk 2 Qi.mov',
+      order: 3,
+    },
+    // Week 3 - Spleen
     {
       workbookSlug: 'week-3-spleen',
       title: 'Acupressure - Week 3: Spleen',
@@ -324,12 +355,42 @@ async function main() {
       order: 1,
     },
     {
-      workbookSlug: 'week-4-kidneys',
+      workbookSlug: 'week-3-spleen',
+      title: 'Mindfulness - Week 3: Spleen',
+      description: 'A guided mindfulness meditation to support digestion and blood production.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Mindfulness - Wk3 Spleen.MOV',
+      order: 2,
+    },
+    {
+      workbookSlug: 'week-3-spleen',
+      title: 'Qigong - Week 3: Spleen',
+      description: 'Qigong practice to support digestion and blood production.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Qigong - wk3 spleen.mov',
+      order: 3,
+    },
+    // Week 4 - Blood
+    {
+      workbookSlug: 'week-4-blood',
       title: 'Acupressure - Week 4: Blood',
       description: 'Learn acupressure points to build and nourish your blood for fertility.',
       s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure - WK 4 Blood.MOV',
       order: 1,
     },
+    {
+      workbookSlug: 'week-4-blood',
+      title: 'Mindfulness - Week 4: Blood',
+      description: 'A guided mindfulness meditation to build and nourish your blood for fertility.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Mindfulness- WK4 Blood.mov',
+      order: 2,
+    },
+    {
+      workbookSlug: 'week-4-blood',
+      title: 'Qigong - Week 4: Blood',
+      description: 'Qigong practice to build and nourish your blood for fertility.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Qigong - wk 4 BLOOD.mov',
+      order: 3,
+    },
+    // Week 5 - Liver
     {
       workbookSlug: 'week-5-liver',
       title: 'Acupressure - Week 5: Liver',
@@ -338,46 +399,98 @@ async function main() {
       order: 1,
     },
     {
-      workbookSlug: 'week-6-heart',
+      workbookSlug: 'week-5-liver',
+      title: 'Mindfulness - Week 5: Liver',
+      description: 'A guided mindfulness meditation to harmonize emotions and improve Qi flow.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Mindfulness- WK5 Liver.mov',
+      order: 2,
+    },
+    {
+      workbookSlug: 'week-5-liver',
+      title: 'Qigong - Week 5: Liver',
+      description: 'Qigong practice to harmonize emotions and improve Qi flow.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Qigong - wk 5 liver.mov',
+      order: 3,
+    },
+    // Week 6 - Shen
+    {
+      workbookSlug: 'week-6-shen',
       title: 'Acupressure - Week 6: Shen',
       description: 'Learn heart-related acupressure to cultivate joy and calm your spirit.',
       s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure - WK6 Shen.mov',
       order: 1,
     },
     {
-      workbookSlug: 'week-7-blood',
+      workbookSlug: 'week-6-shen',
+      title: 'Mindfulness - Week 6: Shen',
+      description: 'A guided mindfulness meditation to cultivate joy and calm your spirit.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Mindfulness- WK6 Shen.mov',
+      order: 2,
+    },
+    {
+      workbookSlug: 'week-6-shen',
+      title: 'Qigong - Week 6: Shen',
+      description: 'Qigong practice to cultivate joy and calm your spirit.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Qigong - wk 6 Shen.mov',
+      order: 3,
+    },
+    // Week 7 - Kidneys
+    {
+      workbookSlug: 'week-7-kidneys',
       title: 'Acupressure - Week 7: Kidney',
       description: 'Master kidney acupressure techniques to build essence and vitality.',
       s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure- WK 7 Kidney.mov',
       order: 1,
     },
     {
-      workbookSlug: 'week-8-yin',
+      workbookSlug: 'week-7-kidneys',
+      title: 'Mindfulness - Week 7: Kidney',
+      description: 'A guided mindfulness meditation to build essence and vitality.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Mindfulness- WK7 Kidney.mov',
+      order: 2,
+    },
+    {
+      workbookSlug: 'week-7-kidneys',
+      title: 'Qigong - Week 7: Kidney',
+      description: 'Qigong practice to build essence and vitality.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Qigong - WK 7 Kidney.mov',
+      order: 3,
+    },
+    // Week 8 - Heart
+    {
+      workbookSlug: 'week-8-heart',
       title: 'Acupressure - Week 8: Heart',
       description: 'Explore heart acupressure for deep rest and yin nourishment.',
       s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure - wk 8 heart.mov',
       order: 1,
     },
     {
-      workbookSlug: 'week-9-yang',
+      workbookSlug: 'week-8-heart',
+      title: 'Mindfulness - Week 8: Heart',
+      description: 'A guided mindfulness meditation for deep rest and yin nourishment.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Mindfulness- WK 8 Heart.mov',
+      order: 2,
+    },
+    {
+      workbookSlug: 'week-8-heart',
+      title: 'Qigong - Week 8: Heart',
+      description: 'Qigong practice for deep rest and yin nourishment.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Qigong - wk8 heart.mov',
+      order: 3,
+    },
+    // Week 9 - Integration
+    {
+      workbookSlug: 'week-9-integration',
       title: 'Acupressure - Week 9: Integration',
       description: 'Integrate all acupressure techniques to balance yin and yang energies.',
       s3Key: 'workbooks/optimal-fertility-blueprint/videos/Acupressure Wk 9 - integration.mov',
       order: 1,
     },
-    // Bonus videos
     {
-      workbookSlug: 'bonus-workbook',
-      title: 'Bonus: Mindfulness Practice',
-      description: 'A guided mindfulness meditation for fertility and emotional well-being.',
-      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Mindfulness- WK 8 Heart.mov',
-      order: 1,
-    },
-    {
-      workbookSlug: 'bonus-workbook',
-      title: 'Bonus: Qigong Practice',
-      description: 'A Qigong session to cultivate heart energy and overall vitality.',
-      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Qigong - wk8 heart.mov',
+      workbookSlug: 'week-9-integration',
+      title: 'Mindfulness - Week 9: Integration',
+      description: 'A guided mindfulness meditation to balance yin and yang energies.',
+      s3Key: 'workbooks/optimal-fertility-blueprint/videos/Mindfulness- Wk 9.mov',
       order: 2,
     },
   ];
