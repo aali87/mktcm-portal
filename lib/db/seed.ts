@@ -279,6 +279,8 @@ async function main() {
     await prisma.workbook.upsert({
       where: { slug: workbookData.slug },
       update: {
+        title: workbookData.title,
+        description: workbookData.description,
         s3FolderPath: workbookData.s3FolderPath,
         totalPages: workbookData.totalPages,
       },
