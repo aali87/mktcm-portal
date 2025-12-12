@@ -208,49 +208,49 @@ export default async function OptimalFertilityBlueprintPage() {
                 {[
                   {
                     week: 1,
-                    title: "Lungs - Strengthen Qi & Immunity",
+                    title: "Lungs - Strengthen Qi & Immune function",
                     description:
                       "Learn how the lungs govern your Qi and defensive energy. Includes breathing exercises and immune-boosting practices.",
                   },
                   {
                     week: 2,
-                    title: "Qi - Cultivate Your Vital Energy",
+                    title: "Qi - Replenishing Vital Energy & Enhancing Resilience",
                     description:
                       "Discover how to build and circulate Qi for optimal reproductive health through Qigong movements.",
                   },
                   {
                     week: 3,
-                    title: "Spleen - Nourish Digestion & Blood",
+                    title: "Spleen Qi - Nourishing your foundation",
                     description:
                       "Support your spleen to transform food into rich, nourishing blood through dietary therapy.",
                   },
                   {
                     week: 4,
-                    title: "Kidneys - Build Essence & Vitality",
+                    title: "Blood: Nourishing and Moving",
                     description:
-                      "The kidneys store your reproductive essence (Jing). Learn to preserve and build this vital resource.",
+                      "Blood nourishes your reproductive organs. Blood-building nutrition and circulation practices.",
                   },
                   {
                     week: 5,
-                    title: "Liver - Harmonize Emotions & Flow",
+                    title: "Liver - Restore Flow & Balance",
                     description:
                       "Ensure smooth flow of Qi and blood with emotional release techniques and stress management.",
                   },
                   {
                     week: 6,
-                    title: "Heart - Cultivate Joy & Connection",
+                    title: "Shen - Harmonizing the Mind, Spirit, and Emotions",
                     description:
                       "The heart houses your spirit (Shen). Heart-opening practices and meditation for emotional well-being.",
                   },
                   {
                     week: 7,
-                    title: "Blood - Build & Circulate Life Force",
+                    title: "Kidneys - Restore & Replenish",
                     description:
-                      "Blood nourishes your reproductive organs. Blood-building nutrition and circulation practices.",
+                      "The kidneys store your reproductive essence (Jing). Learn to preserve and build this vital resource.",
                   },
                   {
                     week: 8,
-                    title: "Yin - Deepen Rest & Nourishment",
+                    title: "Heart - Joy & Circulation",
                     description:
                       "Yin is the cooling, nourishing aspect of your being. Restorative practices and self-nourishment.",
                   },

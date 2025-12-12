@@ -36,7 +36,7 @@ async function main() {
       testPaymentPlanPriceId: process.env.STRIPE_TEST_PRICE_ID_OFB_PLAN || null,
     },
     create: {
-      name: 'Optimal Fertility Blueprint',
+      name: 'The Optimal Fertility Blueprint',
       slug: 'optimal-fertility-blueprint',
       description: '9-week comprehensive program with weekly workbooks, video lessons, acupressure demonstrations, meditations, and supplement protocols. Includes bonus content for full payment.',
       price: 14900, // $149.00

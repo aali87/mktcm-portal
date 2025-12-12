@@ -37,7 +37,7 @@ export function Footer() {
                   href="/programs/optimal-fertility-blueprint"
                   className="text-sm text-neutral-600 hover:text-primary transition-colors"
                 >
-                  Optimal Fertility Blueprint
+                  The Optimal Fertility Blueprint
                 </Link>
               </li>
               <li>

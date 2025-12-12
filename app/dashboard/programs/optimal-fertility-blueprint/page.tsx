@@ -82,7 +82,7 @@ export default async function OptimalFertilityBlueprintDashboard() {
 
           <div className="space-y-4">
             <h1 className="font-serif text-4xl md:text-5xl text-neutral-800">
-              Optimal Fertility Blueprint
+              The Optimal Fertility Blueprint
             </h1>
             <p className="text-lg text-neutral-600 max-w-3xl">
               9 weeks to reproductive health. Each week focuses on a different organ system
