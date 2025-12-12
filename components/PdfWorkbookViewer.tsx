@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
-import { ChevronLeft, ChevronRight, Loader2, ZoomIn, ZoomOut } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, Loader2, ZoomIn, ZoomOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Import react-pdf styles for proper annotation rendering
@@ -223,6 +223,31 @@ export function PdfWorkbookViewer({
     setError(`Failed to load PDF: ${error.message || 'Unknown error'}`);
   };
 
+  // Download BBT Chart for bonus workbook page 12
+  const downloadBbtChart = async () => {
+    try {
+      const response = await fetch('/api/downloads/bbt-chart');
+      if (!response.ok) {
+        throw new Error('Failed to get download URL');
+      }
+      const data = await response.json();
+
+      // Create a temporary link and trigger download
+      const link = document.createElement('a');
+      link.href = data.url;
+      link.download = 'BBT-Printable-Chart.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error('Error downloading BBT chart:', err);
+      alert('Failed to download chart. Please try again.');
+    }
+  };
+
+  // Check if we should show the BBT chart download button
+  const showBbtDownload = workbookSlug === 'bonus-workbook' && currentPage === 12;
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[600px]">
@@ -340,6 +365,20 @@ export function PdfWorkbookViewer({
           </Document>
         </div>
       </div>
+
+      {/* BBT Chart Download Button - shows on bonus workbook page 12 */}
+      {showBbtDownload && (
+        <div className="flex justify-center">
+          <Button
+            onClick={downloadBbtChart}
+            className="gap-2"
+            size="lg"
+          >
+            <Download className="h-5 w-5" />
+            Download BBT Chart
+          </Button>
+        </div>
+      )}
 
       {/* Mobile navigation */}
       <div className="flex items-center justify-center gap-4 md:hidden">
