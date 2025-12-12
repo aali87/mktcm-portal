@@ -248,6 +248,15 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
     );
   }
 
+  // Determine video MIME type based on URL extension
+  const getVideoType = (url: string): string => {
+    const lowerUrl = url.toLowerCase();
+    if (lowerUrl.includes('.mov')) return 'video/quicktime';
+    if (lowerUrl.includes('.webm')) return 'video/webm';
+    if (lowerUrl.includes('.m4v')) return 'video/x-m4v';
+    return 'video/mp4';
+  };
+
   return (
     <div className="w-full aspect-video bg-black" onContextMenu={handleContextMenu}>
       <video
@@ -258,6 +267,8 @@ export default function VideoPlayer({ videoId, initialProgress = 0 }: VideoPlaye
         preload="metadata"
         playsInline
       >
+        <source src={videoUrl} type={getVideoType(videoUrl)} />
+        {/* Fallback for browsers that prefer mp4 type declaration */}
         <source src={videoUrl} type="video/mp4" />
         Your browser does not support the video tag.
       </video>

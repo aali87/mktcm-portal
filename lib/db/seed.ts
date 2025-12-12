@@ -134,14 +134,14 @@ async function main() {
   const video2 = await prisma.video.upsert({
     where: { id: 'free-workshop-video-2' },
     update: {
-      url: 'videos/free-workshop/living-vibrantly-day-2.mp4',
+      url: 'videos/free-workshop/living-vibrantly-day-2.mov',
     },
     create: {
       id: 'free-workshop-video-2',
       productId: freeWorkshop.id,
       title: 'Day 2: Nutrition and Lifestyle',
       description: 'Explore how nutrition and lifestyle choices impact your fertility from a TCM perspective. Get practical tips you can implement today.',
-      url: 'videos/free-workshop/living-vibrantly-day-2.mp4',
+      url: 'videos/free-workshop/living-vibrantly-day-2.mov',
       duration: 1500, // 25 minutes in seconds
       order: 2,
     },
@@ -150,14 +150,14 @@ async function main() {
   const video3 = await prisma.video.upsert({
     where: { id: 'free-workshop-video-3' },
     update: {
-      url: 'videos/free-workshop/living-vibrantly-day-3.mp4',
+      url: 'videos/free-workshop/living-vibrantly-day-3.mov',
     },
     create: {
       id: 'free-workshop-video-3',
       productId: freeWorkshop.id,
       title: 'Day 3: Stress Management & Next Steps',
       description: 'Master stress management techniques specifically designed for fertility support. Learn your personalized next steps on this journey.',
-      url: 'videos/free-workshop/living-vibrantly-day-3.mp4',
+      url: 'videos/free-workshop/living-vibrantly-day-3.mov',
       duration: 1800, // 30 minutes in seconds
       order: 3,
     },

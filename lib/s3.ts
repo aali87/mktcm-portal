@@ -17,6 +17,18 @@ const s3Client = new S3Client({
 const BUCKET_NAME = process.env.AWS_S3_BUCKET || '';
 
 /**
+ * Get the appropriate MIME type for a video file based on extension
+ */
+function getVideoMimeType(filename: string): string {
+  const lowerFilename = filename.toLowerCase();
+  if (lowerFilename.endsWith('.mov')) return 'video/quicktime';
+  if (lowerFilename.endsWith('.webm')) return 'video/webm';
+  if (lowerFilename.endsWith('.m4v')) return 'video/x-m4v';
+  if (lowerFilename.endsWith('.avi')) return 'video/x-msvideo';
+  return 'video/mp4';
+}
+
+/**
  * Generate a signed URL for a video file in S3
  * @param videoUrl - The S3 object key for the video (stored in video.url field)
  * @param expiresIn - URL expiration time in seconds (default: 3600 = 1 hour)
@@ -34,9 +46,14 @@ export async function getSignedVideoUrl(
     throw new Error('Video URL is required');
   }
 
+  // Get the appropriate content type for the video format
+  const contentType = getVideoMimeType(videoUrl);
+
   const command = new GetObjectCommand({
     Bucket: BUCKET_NAME,
     Key: videoUrl,
+    // Override the response content type to ensure browser handles it correctly
+    ResponseContentType: contentType,
   });
 
   try {
